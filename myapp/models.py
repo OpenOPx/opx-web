@@ -14,15 +14,15 @@ class Usuario(AbstractBaseUser):
     useremail = models.EmailField(max_length = 255, unique=True)
     password = models.CharField(max_length = 255)
     usertoken = models.CharField(max_length = 255, null = True, blank = True)
-    userfullname = models.CharField(max_length = 255)
-    rolid = models.UUIDField()
-    userleveltype = models.IntegerField()
-    userestado = models.IntegerField()
-    fecha_nacimiento = models.DateField()
-    generoid = models.UUIDField()
-    barrioid = models.IntegerField()
-    nivel_educativo_id = models.UUIDField()
-    telefono = models.CharField(max_length=20)
+    userfullname = models.CharField(max_length = 255, null=True)
+    rolid = models.UUIDField(null=True)
+    userleveltype = models.IntegerField(null=True)
+    userestado = models.IntegerField(null=True)
+    fecha_nacimiento = models.DateField(null=True)
+    generoid = models.UUIDField(null=True)
+    barrioid = models.IntegerField(null=True)
+    nivel_educativo_id = models.UUIDField(null=True)
+    telefono = models.CharField(max_length=20, null=True)
     latitud = models.CharField(blank=True, null=True, max_length=30)
     longitud = models.CharField(blank=True, null=True, max_length=30)
     horaubicacion = models.CharField(blank=True, null=True, max_length=100)
@@ -58,8 +58,8 @@ class DatosContexto(models.Model):
     datavalor = models.CharField(max_length = 100)
     datatipe = models.CharField(max_length=100)
     contextoid = models.UUIDField()
-    descripcion = models.CharField(max_length=500)
-    geojson = models.CharField(max_length=3000)
+    descripcion = models.CharField(max_length=500, null=True)
+    geojson = models.CharField(max_length=3000, null=True)
     fecha = models.DateField(null=True, blank=True)
     hora = models.TimeField(null=True, blank=True)
 
@@ -72,8 +72,8 @@ class DatosContexto(models.Model):
 class ContextoProyecto(models.Model):
 
     contproyid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    proyid = models.UUIDField()
-    contextoid = models.UUIDField()
+    proyid = models.UUIDField(null=True)
+    contextoid = models.UUIDField(null=True)
 
     class Meta:
         db_table = '"v1"."contextos_proyecto"'
@@ -84,7 +84,7 @@ class ContextoProyecto(models.Model):
 class Decision(models.Model):
     desiid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     desidescripcion = models.CharField(max_length = 1000)
-    userid = models.UUIDField()
+    userid = models.UUIDField(null=True)
 
     class Meta:
         db_table = '"v1"."decisiones"'
@@ -94,8 +94,8 @@ class Decision(models.Model):
 #
 class DecisionProyecto(models.Model):
     desproid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    proyid = models.UUIDField()
-    desiid = models.UUIDField()
+    proyid = models.UUIDField(null=True)
+    desiid = models.UUIDField(null=True)
 
     class Meta:
         db_table = '"v1"."decisiones_proyecto"'
@@ -105,8 +105,8 @@ class DecisionProyecto(models.Model):
 #
 class Equipo(models.Model):
     equid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    userid = models.UUIDField()
-    proyid = models.UUIDField()
+    userid = models.UUIDField(null=True)
+    proyid = models.UUIDField(null=True)
     miembroestado = models.IntegerField(default=1)
 
     class Meta:
@@ -128,8 +128,8 @@ class Accion(models.Model):
 #
 class FuncionRol(models.Model):
     funcrolid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
-    rolid = models.UUIDField()
-    accionid = models.CharField(max_length = 255)
+    rolid = models.UUIDField(null=True)
+    accionid = models.CharField(max_length = 255, null=True)
     funcrolestado = models.IntegerField()
     funcrolpermiso = models.IntegerField()
 
@@ -161,9 +161,9 @@ class Proyecto(models.Model):
     proyfechacreacion = models.CharField(max_length=100)
     proyfechacierre = models.DateField(null=True, blank=True)
     proyestado = models.IntegerField()
-    proypropietario = models.UUIDField()
+    proypropietario = models.UUIDField(null=True)
     proyfechainicio = models.DateField(null=True, blank=True)
-    tiproid = models.UUIDField()
+    tiproid = models.UUIDField(null=True)
 
     class Meta:
         db_table = '"v1"."proyectos"'
@@ -187,19 +187,19 @@ class Tarea(models.Model):
 
     tareid = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     tarenombre = models.CharField(max_length = 255)
-    taretipo = models.IntegerField()
+    taretipo = models.IntegerField(null=True)
     tarerestricgeo = models.CharField(max_length = 1000)
-    tarerestriccant = models.IntegerField()
+    tarerestriccant = models.IntegerField(null=True)
     tarerestrictime = models.CharField(max_length = 1000)
-    instrid = models.UUIDField()
-    proyid = models.UUIDField()
+    instrid = models.UUIDField(null=True)
+    proyid = models.UUIDField(null=True)
     dimensionid = models.UUIDField(null=True, blank=True)
-    geojson_subconjunto = models.CharField(max_length=1000)
+    geojson_subconjunto = models.CharField(max_length=1000, null=True)
     tarefechacreacion = models.DateTimeField(null = True, blank = True, default=datetime.today())
-    taredescripcion = models.TextField()
+    taredescripcion = models.TextField(null=True)
     tareestado = models.IntegerField(default=0)
     observaciones = models.TextField(blank = True, null = True)
-    tareprioridad = models.IntegerField()
+    tareprioridad = models.IntegerField(null=True)
 
     class Meta:
         db_table = '"v1"."tareas"'
@@ -210,9 +210,9 @@ class Tarea(models.Model):
 class DelimitacionGeografica(models.Model):
 
     dimensionid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    proyid = models.UUIDField()
-    nombre = models.CharField(max_length=255)
-    geojson = models.CharField(max_length=1000)
+    proyid = models.UUIDField(null=True)
+    nombre = models.CharField(max_length=255, null=True)
+    geojson = models.CharField(max_length=1000, null=True)
     estado = models.IntegerField(default=1)
 
     class Meta:
@@ -257,12 +257,12 @@ class Barrio(models.Model):
 class Cartografia(models.Model):
 
     cartografiaid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-    instrid = models.UUIDField()
+    instrid = models.UUIDField(null=True)
     osmid = models.CharField(max_length=255)
-    elemosmid = models.UUIDField()
-    userid = models.UUIDField()
+    elemosmid = models.UUIDField(null=True)
+    userid = models.UUIDField(null=True)
     estado = models.IntegerField(default=0)
-    tareid = models.UUIDField()
+    tareid = models.UUIDField(null=True)
 
     class Meta:
         db_table = '"v1"."cartografias"'
@@ -287,13 +287,13 @@ class ElementoOsm(models.Model):
 class Encuesta(models.Model):
     
     encuestaid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-    instrid = models.UUIDField()
-    koboid = models.UUIDField()
+    instrid = models.UUIDField(null=True)
+    koboid = models.UUIDField(null=True)
     contenido = models.CharField(max_length=5000)
     estado = models.IntegerField(default=0)
     observacion = models.CharField(blank=True, max_length=3000, null=True)
-    userid = models.UUIDField()
-    tareid = models.UUIDField()
+    userid = models.UUIDField(null=True)
+    tareid = models.UUIDField(null=True)
     
     class Meta:
         db_table = '"v1"."encuestas"'
@@ -318,13 +318,13 @@ class Contextualizacion(models.Model):
     fecha_hecho = models.DateField()
     hora_hecho = models.TimeField()
     dia = models.IntegerField()
-    confid = models.UUIDField()
-    generoid = models.UUIDField()
+    confid = models.UUIDField(null=True)
+    generoid = models.UUIDField(null=True)
     edad = models.IntegerField()
-    nivelid = models.UUIDField()
+    nivelid = models.UUIDField(null=True)
     nombre_barrio = models.CharField(max_length=300)
-    cantidad = models.IntegerField()
-    barrioid = models.IntegerField()
+    cantidad = models.IntegerField(null=True)
+    barrioid = models.IntegerField(null=True)
 
     class Meta:
         db_table = '"v1"."contextualizaciones"'
@@ -347,8 +347,8 @@ class  Parametro(models.Model):
 class AsignacionPuntaje(models.Model):
 
     asigid = models.UUIDField(default = uuid.uuid4, primary_key=True)
-    userid = models.UUIDField()
-    tareid = models.UUIDField()
+    userid = models.UUIDField(null=True)
+    tareid = models.UUIDField(null=True)
     puntaje = models.IntegerField()
 
     class Meta:
@@ -361,7 +361,7 @@ class PlantillaEquipo(models.Model):
 
     planid = models.UUIDField(default=uuid.uuid4, primary_key=True)
     descripcion = models.TextField()
-    userid = models.UUIDField()
+    userid = models.UUIDField(null=True)
 
     class Meta:
         db_table = '"v1"."plantillas_equipo"'
@@ -372,9 +372,9 @@ class PlantillaEquipo(models.Model):
 class MiembroPlantilla(models.Model):
 
     miplid = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    userid = models.UUIDField()
+    userid = models.UUIDField(null=True)
     estado = models.IntegerField(default=1)
-    planid = models.UUIDField()
+    planid = models.UUIDField(null=True)
 
     class Meta:
         db_table = '"v1"."miembros_plantilla"'

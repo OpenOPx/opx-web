@@ -1,4 +1,4 @@
-window.kpiUrl = "http://kf.oim-opc.pre/#/forms";
+window.kpiUrl = "http://kf.kobo.local/#/forms";
 // window.kpiUrl = "https://kobo.humanitarianresponse.info/#/forms/";
 
 window.getToken = function(){
