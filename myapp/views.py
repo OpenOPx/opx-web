@@ -1753,7 +1753,7 @@ def informacionFormularioKoboToolbox(id):
 
     client = http.client.HTTPConnection(settings['kobo-kpi'], int(settings['kobo-puerto']), timeout = int(settings['timeout-request']))
 
-    client.request('GET', '/assets/' + id + '/submissions/', '{}', headers)
+    client.request('GET', '/assets/' + id + '/submissions/?format=json', '{}', headers)
 
     response = client.getresponse()
 
@@ -1985,14 +1985,14 @@ def listadoFormulariosKoboToolbox(request):
             }
 
         else:
-            print("Oops!", sys.exc_info()[0], "occurred.")
+            print("Oops1!", sys.exc_info()[0], "occurred.")
             data = {
                 'code': 500,
                 'status': 'error'
             }
 
     except:
-        print("Oops!", sys.exc_info()[0], "occurred.")
+        print("Oops2! ", sys.exc_info()[0], "occurred.")
         data = {
             'code': 500,
             'status': 'error'
