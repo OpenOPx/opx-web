@@ -1985,13 +1985,14 @@ def listadoFormulariosKoboToolbox(request):
             }
 
         else:
+            print("Oops!", sys.exc_info()[0], "occurred.")
             data = {
                 'code': 500,
                 'status': 'error'
             }
 
     except:
-
+        print("Oops!", sys.exc_info()[0], "occurred.")
         data = {
             'code': 500,
             'status': 'error'
