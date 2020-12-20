@@ -42,7 +42,7 @@ estadisticas = new Vue({
           console.log("INICIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
 
           axios({
-              url: 'plantillas-equipo/list/',
+              url: '/plantillas-equipo/list/',
               method: 'GET',
               headers: {
                   Authorization: getToken()
@@ -54,7 +54,7 @@ estadisticas = new Vue({
                   this.infoEquipos = response.data.data;
                   console.log("BUENA CONSULTAAAAAAAAAAAAAAAAAAAAAA")
               }else{
-                  console.log("RESPONSE DATA: "+response.data.data)
+                  console.log("RESPONSE DATA: ")
               }
           });
       },
