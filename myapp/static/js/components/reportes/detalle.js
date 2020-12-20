@@ -4,7 +4,6 @@ estadisticas = new Vue({
     data: {
         proyectoID: '',
         datosGenerales: [],
-        infoEquipos:[],
         ranking: [],
         dimensionesProyecto: [],
         tareasDimension: [],
@@ -20,7 +19,6 @@ estadisticas = new Vue({
             window.setTimeout(() => {
 
                 this.obtenerDatosGenerales();
-                this.obtenerInfoEquipos();
                 this.tiposTarea();
                 this.usuariosXBarrio();
                 this.usuariosXNivelEducativo();
@@ -242,26 +240,6 @@ estadisticas = new Vue({
                 if(response.data.code == 200 && response.data.status == 'success'){
 
                     this.datosGenerales = response.data.data;
-                }
-            });
-        },
-        obtenerInfoEquipos(){
-            console.log("INICIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-
-            axios({
-                url: 'plantillas-equipo/list/',
-                method: 'GET',
-                headers: {
-                    Authorization: getToken()
-                }
-            })
-            .then(response => {
-
-                if(response.data.code == 200 && response.data.status == 'success'){
-                    this.infoEquipos = response.data.data;
-                    console.log("BUENA CONSULTAAAAAAAAAAAAAAAAAAAAAA")
-                }else{
-                    console.log("RESPONSE DATA: "+response.data.data)
                 }
             });
         },
