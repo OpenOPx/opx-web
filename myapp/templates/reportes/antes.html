@@ -5,21 +5,15 @@
     <div class="container-fluid" id="dashboard">
       <div class="row">
         <div class="col-lg-8 col-md-3 col-sm-8">
-          <!--<h2>Antes</h2>-->
-          <div class="card">
-            <div class="card-header card-header-primary">
-              <h4 class="card-title ">Reportes</h4>
-              <p class="card-category"> Antes </p>
-            </div>
+              <h4 class="card-header card-header-primary">Reportes usuarios y equipos</h4>
             <div class="card-body">
               <table class="table table-hover">
                 <thead>
                 <tr>
-                  <th>Decisión</th>
-                  <th>Contexto</th>
-                  <th>Proyectos</th>
-                  <th>Tareas</th>
-                  <th>Usuarios</th>
+                  <th>Nombre</th>
+                  <th>Miembros</th>
+                  <th>Efectividad</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,13 +21,11 @@
                     <td> [[ datosGenerales.decisiones ]] </td>
                     <td> [[ datosGenerales.contextos ]] </td>
                     <td> [[ datosGenerales.proyectos ]] </td>
-                    <td> [[ datosGenerales.tareas ]] </td>
-                    <td> [[ datosGenerales.usuarios ]] </td>
+                    <td><button class="editbtn">Opciones</button></td>
                   </tr>
                 </tbody>
               </table>
             </div>
-          </div>
 
         </div>
         <div class="col-lg-4">
