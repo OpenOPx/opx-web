@@ -20,6 +20,7 @@ estadisticas = new Vue({
             window.setTimeout(() => {
 
                 this.obtenerDatosGenerales();
+                this.obtenerInfoEquipos();
                 this.tiposTarea();
                 this.usuariosXBarrio();
                 this.usuariosXNivelEducativo();
