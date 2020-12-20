@@ -4,6 +4,7 @@ estadisticas = new Vue({
     data: {
         proyectoID: '',
         datosGenerales: [],
+        infoEquipos:[],
         ranking: [],
         dimensionesProyecto: [],
         tareasDimension: [],
@@ -240,6 +241,22 @@ estadisticas = new Vue({
                 if(response.data.code == 200 && response.data.status == 'success'){
 
                     this.datosGenerales = response.data.data;
+                }
+            });
+        },
+        obtenerInfoEquipos(){
+
+            axios({
+                url: 'plantillas-equipo/list/',
+                method: 'GET',
+                headers: {
+                    Authorization: getToken()
+                }
+            })
+            .then(response => {
+
+                if(response.data.code == 200 && response.data.status == 'success'){
+                    this.infoEquipos = response.data.data;
                 }
             });
         },
