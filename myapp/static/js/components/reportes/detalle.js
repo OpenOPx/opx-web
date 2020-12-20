@@ -246,6 +246,7 @@ estadisticas = new Vue({
             });
         },
         obtenerInfoEquipos(){
+            console.log("INICIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
 
             axios({
                 url: 'plantillas-equipo/list/',
@@ -258,6 +259,9 @@ estadisticas = new Vue({
 
                 if(response.data.code == 200 && response.data.status == 'success'){
                     this.infoEquipos = response.data.data;
+                    console.log("BUENA CONSULTAAAAAAAAAAAAAAAAAAAAAA")
+                }else{
+                    console.log("RESPONSE DATA: "+response.data.data)
                 }
             });
         },
