@@ -3,78 +3,40 @@
 {% block content %}
 
     <div class="container-fluid" id="reportes-despues">
+      <div class="col-lg-8 col-md-3 col-sm-8">
+        <h2 class="card-title ">Miembros equipo _____</h4>
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th></th>
 
-        <!-- TABS -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                          <li @click="cambioVista(1)" class="nav-item">
-                            <a class="nav-link">Tarjetas</a>
-                          </li>
-                          <li @click="cambioVista(2)" class="nav-item">
-                            <a class="nav-link">Gantt</a>
-                          </li>
-                        </ul>
+              </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="checkbox" id="title1" />
+                    <label for="title1">Accordion One</label>
+                    <div class="content">
+                    <p>Your content goes here.</p>
                     </div>
-                </div>
-            </div>
-        </div>
+                  </td>
 
-      <div class="row" :class="{'display-none': !vistaTarjetas}">
-          <div v-for="p in proyectos" @click="detalle(p.id)" class="col-lg-3 col-md-4 col-sm-2 col-xs-12">
-              <div class="card proyecto-durante">
-                  <div class="card-body">
-                      <p>
-                          <div class="iniciales-usuario espacio">
-                            <span> [[ p.encargado | iniciales-usuario ]] </span>
-                          </div>
-                          <span class="encargado espacio"> [[ p.encargado ]] </span>
-                          <span class="espacio"> [[ p.fecha | fechas ]] </span>
-                      </p>
-                      <h3>[[ p.nombre ]]</h3>
-                      <p v-html="p.descripcion"></p>
 
-                      <!-- Barra de progreso -->
-                      <div id="progress-bar">
-                        <p id="curprogress" :style="'width:' + p.progreso + '%'">&nbsp;</p>
-                      </div>
 
-                      <p>
-                          <span class="espacio"><span class="valor"> [[ p.progreso ]] % </span> Tareas </span>
-                          <span class="espacio"><span class="valor"> [[ p.validacion ]] % </span> Validado </span>
-                          <i class="material-icons">person</i>
-                          [[ p.integrantes ]]
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
 
-      <div class="row" :class="{'display-none': !vistaGantt}">
-        <div class="col-lg-12">
-          <svg id="proyectos-gantt"></svg>
-        </div>
-      </div>
 
-      <!-- Detalle de Proyectos -->
-      <div class="modal fade" id="estadisticas-tareas">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col md-6">
-                  <canvas id="tareas-x-tipo" width="400" height="400"></canvas>
-                </div>
-                <div class="col md-6">
-                  <canvas id="tareas-x-estado" width="400" height="400"></canvas>
-                </div>
-              </div>
-            </div>
+
+                  <td><button class="editbtn">Opciones</button></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+
 
     </div>
 

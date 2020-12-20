@@ -1,0 +1,25 @@
+<div class="col-lg-4">
+
+    <div class="card">
+        <div id="ranking-circle">
+          <i class="fa fa-trophy" aria-hidden="true"></i>
+        </div>
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead class="text-warning">
+            <tr>
+              <th>Nombre</th>
+              <th>Puntaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="r in ranking">
+              <td>[[ r.userfullname ]]</td>
+              <td> [[ r.puntaje ]] </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
