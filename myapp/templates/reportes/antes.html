@@ -5,62 +5,33 @@
     <div class="container-fluid" id="dashboard">
       <div class="row">
         <div class="col-lg-8 col-md-3 col-sm-8">
-          <!--<h2>Antes</h2>-->
+          <h2 class="card-title ">Reportes usuarios y equipos</h4>
           <div class="card">
-            <div class="card-header card-header-primary">
-              <h4 class="card-title ">Reportes</h4>
-              <p class="card-category"> Antes </p>
-            </div>
             <div class="card-body">
+
               <table class="table table-hover">
                 <thead>
                 <tr>
-                  <th>Decisión</th>
-                  <th>Contexto</th>
-                  <th>Proyectos</th>
-                  <th>Tareas</th>
-                  <th>Usuarios</th>
+                  <th>Nombre</th>
+                  <th>Miembros</th>
+                  <th>Efectividad</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td> [[ datosGenerales.decisiones ]] </td>
+                    <td> [[ datosGenerales.contextos ]] </td>
                     <td> [[ datosGenerales.contextos ]] </td>
                     <td> [[ datosGenerales.proyectos ]] </td>
-                    <td> [[ datosGenerales.tareas ]] </td>
-                    <td> [[ datosGenerales.usuarios ]] </td>
+                    <td><button class="editbtn">Opciones</button></td>
                   </tr>
                 </tbody>
               </table>
+              
             </div>
           </div>
-
         </div>
-        <div class="col-lg-4">
 
-          <div class="card">
-              <div id="ranking-circle">
-                <i class="fa fa-trophy" aria-hidden="true"></i>
-              </div>
-            <div class="card-body">
-              <table class="table table-hover">
-                <thead class="text-warning">
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Puntaje</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="r in ranking">
-                    <td>[[ r.userfullname ]]</td>
-                    <td> [[ r.puntaje ]] </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
       </div>
 
       <div class="row">

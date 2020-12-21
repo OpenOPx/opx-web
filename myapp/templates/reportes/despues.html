@@ -2,80 +2,113 @@
 
 {% block content %}
 
-    <div class="container-fluid" id="reportes-despues">
+<style>
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body
+{
 
-        <!-- TABS -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                          <li @click="cambioVista(1)" class="nav-item">
-                            <a class="nav-link">Tarjetas</a>
-                          </li>
-                          <li @click="cambioVista(2)" class="nav-item">
-                            <a class="nav-link">Gantt</a>
-                          </li>
-                        </ul>
-                    </div>
+}
+.accordion
+{
+    width: 1000px;
+}
+.accordion .contentBx
+{
+    position: relative;
+    margin: 20px 20px;
+    background: #fff;
+    
+}
+.accordion .contentBx .label1
+{
+    position: relative;
+    padding: 10px;
+    background: #fff;
+    color: #000;
+    cursor: pointer;
+}
+.accordion .contentBx .label1::before
+{
+    content: '+';
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+}
+.accordion .contentBx.active .label1::before
+{
+    content: '-';
+}
+.accordion .contentBx .content
+{
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    transition: 0.25s;
+    overflow-y: auto;
+}
+.accordion .contentBx.active .content
+{
+    height: 226px;
+    padding: 10px;
+}
+
+</style>
+
+          <div class="container-fluid" id="dashboard"></div>
+            <h2 class="card-title ">Miembros equipo _____</h2>
+
+            <div class="accordion">
+              <div class="contentBx">
+                <div class="label1">Informacion usuario1</div>
+                <div class="content">
+                  <table class="table table-hover">
+                    <tbody>
+                      <tr>
+                        <td class="label" align="center"> Nombre </td>
+                        <td class="label" align="center"> Puntaje </td>
+                        <td class="label" align="center"> Estado </td>
+                      </tr>
+                      <tr>
+                        <td class="label" align="center"> [[ user.name ]] </td>
+                        <td class="label" align="center"> [[ user.score ]] </td>
+                        <td class="label" align="center"> [[ user.state ]] </td>
+                      </tr>
+                      <tr>
+                        <td class="label" align="center"> Fecha de nacimiento </td>
+                        <td class="label" align="center"> Empleado </td>
+                        <td class="label" align="center"> Teléfono </td>
+                      </tr>
+                      <tr>
+                        <td class="label" align="center"> [[ user.dateBorn ]] </td>
+                        <td class="label" align="center"> [[ user.job ]] </td>
+                        <td class="label" align="center"> [[ user.phone ]] </td>
+                        <td><button class="editbtn" align="center">Opciones</button></td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
                 </div>
-            </div>
-        </div>
-
-      <div class="row" :class="{'display-none': !vistaTarjetas}">
-          <div v-for="p in proyectos" @click="detalle(p.id)" class="col-lg-3 col-md-4 col-sm-2 col-xs-12">
-              <div class="card proyecto-durante">
-                  <div class="card-body">
-                      <p>
-                          <div class="iniciales-usuario espacio">
-                            <span> [[ p.encargado | iniciales-usuario ]] </span>
-                          </div>
-                          <span class="encargado espacio"> [[ p.encargado ]] </span>
-                          <span class="espacio"> [[ p.fecha | fechas ]] </span>
-                      </p>
-                      <h3>[[ p.nombre ]]</h3>
-                      <p v-html="p.descripcion"></p>
-
-                      <!-- Barra de progreso -->
-                      <div id="progress-bar">
-                        <p id="curprogress" :style="'width:' + p.progreso + '%'">&nbsp;</p>
-                      </div>
-
-                      <p>
-                          <span class="espacio"><span class="valor"> [[ p.progreso ]] % </span> Tareas </span>
-                          <span class="espacio"><span class="valor"> [[ p.validacion ]] % </span> Validado </span>
-                          <i class="material-icons">person</i>
-                          [[ p.integrantes ]]
-                      </p>
-                  </div>
               </div>
-          </div>
-      </div>
-
-      <div class="row" :class="{'display-none': !vistaGantt}">
-        <div class="col-lg-12">
-          <svg id="proyectos-gantt"></svg>
-        </div>
-      </div>
-
-      <!-- Detalle de Proyectos -->
-      <div class="modal fade" id="estadisticas-tareas">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col md-6">
-                  <canvas id="tareas-x-tipo" width="400" height="400"></canvas>
-                </div>
-                <div class="col md-6">
-                  <canvas id="tareas-x-estado" width="400" height="400"></canvas>
-                </div>
-              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-    </div>
+    
+    <script>
+      const accordion = document.getElementsByClassName('contentBx');
+      for(i=0;i<accordion.length;i++){
+        accordion[i].addEventListener('click',function(){
+          this.classList.toggle('active')
+        })
+      }
+    </script>
+
 
 {% endblock %}

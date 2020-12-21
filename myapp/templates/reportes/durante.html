@@ -2,101 +2,88 @@
 
 {% block content %}
 
-    <div class="container-fluid" id="reportes-durante">
+    <div class="container-fluid" id="dashboard">
 
-        <!-- TABS -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header card-header-tabs card-header-primary">
-                      <div class="nav-tabs-navigation">
-                        <div class="nav-tabs-wrapper">
-                          <ul class="nav nav-tabs" data-tabs="tabs">
-                            <li class="nav-item">
-                              <a @click="cambioVista(1)" class="nav-link show" href="#">
-                                <i class="material-icons">code</i> Tarjetas
-                                <div class="ripple-container"></div>
-                              <div class="ripple-container"></div></a>
-                            </li>
-                            <li class="nav-item">
-                              <a @click="cambioVista(2)" class="nav-link" href="#">
-                                <i class="material-icons">cloud</i> Gantt
-                                <div class="ripple-container"></div>
-                              <div class="ripple-container"></div></a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+      <h2 class="card-title">Equipo ____ - Miembro ____</h2>
 
-                    <!--<div class="card-body">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                          <li @click="cambioVista(1)" class="nav-item">
-                            <a class="nav-link">Tarjetas</a>
-                          </li>
-                          <li @click="cambioVista(2)" class="nav-item">
-                            <a class="nav-link">Gantt</a>
-                          </li>
-                        </ul>
-                    </div>-->
+      <h3 class="card-title" align="center">Información general</h3>
+      <div class="card">
+        <div class="card-body">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td class="label"> Nombre </td>
+                <td class="label"> Puntaje promedio</td>
+                <td class="label"> Estado </td>
+              </tr>
+              <tr>
+                <td > [[ name ]] </td>
+                <td > [[ score ]] </td>
+                <td > [[ state ]] </td>
+              </tr>
+              <tr>
+                <td class="label"> Nacimiento </td>
+                <td class="label"> Empleado</td>
+                <td class="label"> Telefono </td>
+              </tr>
+              <tr>
+                <td > [[ born ]] </td>
+                <td > [[ job ]] </td>
+                <td > [[ phone ]] </td>
+              </tr>
 
-                    <div class="card-body">
-                      <div class="row" :class="{'display-none': !vistaTarjetas}">
-                          <div v-for="p in proyectos" @click="detalle(p.id)" class="col-lg-3 col-md-4 col-sm-2 col-xs-12">
-                              <div class="card proyecto-durante">
-                                  <div class="card-body">
-                                      <p>
-                                          <div class="iniciales-usuario espacio">
-                                              <span>[[ p.encargado | iniciales-usuario ]]</span>
-                                          </div>
-                                          <span class="encargado espacio"> [[ p.encargado ]] </span>
-                                          <span class="espacio"> [[ p.fecha | fechas ]] </span>
-                                      </p>
-                                      <h3>[[ p.nombre ]]</h3>
-                                      <p v-html="p.descripcion"> </p>
-
-                                      <!-- Barra de progreso -->
-                                      <div id="progress-bar">
-                                        <p id="curprogress" :style="'width:' + p.progreso + '%'">&nbsp;</p>
-                                      </div>
-
-                                      <p>
-                                          <span class="espacio"><span class="valor"> [[ p.progreso ]] % </span> Tareas </span>
-                                          <span class="espacio"><span class="valor"> [[ p.validacion ]] % </span> Validado </span>
-                                          <i class="material-icons">person</i>
-                                          [[ p.integrantes ]]
-                                      </p>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="row" :class="{'display-none': !vistaGantt}">
-                        <div class="col-lg-12">
-                          <svg id="proyectos-gantt"></svg>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-      <!-- Detalle de Proyectos -->
-      <div class="modal fade" id="estadisticas-tareas">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col md-6">
-                  <canvas id="tareas-x-tipo" width="400" height="400"></canvas>
-                </div>
-                <div class="col md-6">
-                  <canvas id="tareas-x-estado" width="400" height="400"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
+            </tbody>
+          </table>
         </div>
       </div>
+      
+      <h3 class="card-title" align="center">Equipos</h3>
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Puntaje</th>
+                  <th>Estado</th>
+                  <th>Participación</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="center"> [[ nameE ]] </td>
+                  <td align="center"> [[ scoreE ]] </td>
+                  <td align="center"> [[ stateE ]] </td>
+                  <td align="center"> [[ participationE ]] </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h3 class="card-title" align="center">Proyectos</h3>
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Puntaje</th>
+                  <th>Estado</th>
+                  <th>Participación</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td align="center"> [[ nameP ]] </td>
+                  <td align="center"> [[ scoreP ]] </td>
+                  <td align="center"> [[ stateP ]] </td>
+                  <td align="center"> [[ participationP ]] </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
     </div>
 

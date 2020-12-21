@@ -6,6 +6,7 @@ estadisticas = new Vue({
         if(window.location.pathname == '/reportes/antes/'){
 
            this.obtenerDatosGenerales();
+           this.obtenerInfoEquipos();
            this.obtenerRanking();
            this.usuariosXRol();
            this.usuariosXGenero();
@@ -18,7 +19,9 @@ estadisticas = new Vue({
     data: {
 
         datosGenerales: 0,
-        ranking: []
+        ranking: [],
+        infoEquipos:[]
+
     },
     methods: {
         obtenerDatosGenerales(){
@@ -35,6 +38,26 @@ estadisticas = new Vue({
                 this.datosGenerales = response.data.data;
             })
         },
+        obtenerInfoEquipos(){
+          console.log("INICIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+
+          axios({
+              url: '/plantillas-equipo/list/',
+              method: 'GET',
+              headers: {
+                  Authorization: getToken()
+              }
+          })
+          .then(response => {
+
+              if(response.data.code == 200 && response.data.status == 'success'){
+                  this.infoEquipos = response.data.data;
+                  console.log("BUENA CONSULTAAAAAAAAAAAAAAAAAAAAAA")
+              }else{
+                  console.log("RESPONSE DATA: ")
+              }
+          });
+      },
         usuariosXRol(){
 
             axios({
