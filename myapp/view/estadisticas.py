@@ -1336,6 +1336,15 @@ def limpiezaDatos(request, proyid):
 # ================ Vistas ===============
 
 ##
+# @brief Plantilla de estadisticas correspondiente al ranking global de los usuarios
+# @param request instancia HttpRequest
+# @return plantilla HTML
+#
+def rankingView(request):
+
+    return render(request, "reportes/rank2.html")
+
+##
 # @brief Plantilla de estadisticas generales del sistema
 # @param request instancia HttpRequest
 # @return plantilla HTML

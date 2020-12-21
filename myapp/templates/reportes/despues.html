@@ -12,10 +12,7 @@
 }
 body
 {
-display: flex;
-justify-content: center;
-align-items: center;
-min-height: 100vh;
+
 }
 .accordion
 {
@@ -38,7 +35,7 @@ min-height: 100vh;
 }
 .accordion .contentBx .label1::before
 {
-    content: '↓';
+    content: '+';
     position: absolute;
     top: 50%;
     right: 20px;
@@ -47,7 +44,7 @@ min-height: 100vh;
 }
 .accordion .contentBx.active .label1::before
 {
-    content: '↑';
+    content: '-';
 }
 .accordion .contentBx .content
 {
@@ -59,12 +56,14 @@ min-height: 100vh;
 }
 .accordion .contentBx.active .content
 {
-    height: 222px;
+    height: 226px;
     padding: 10px;
 }
+
 </style>
 
-        <h2 class="card-title ">Miembros equipo _____</h2>
+          <div class="container-fluid" id="dashboard"></div>
+            <h2 class="card-title ">Miembros equipo _____</h2>
 
             <div class="accordion">
               <div class="contentBx">
@@ -91,12 +90,16 @@ min-height: 100vh;
                         <td class="label" align="center"> [[ user.dateBorn ]] </td>
                         <td class="label" align="center"> [[ user.job ]] </td>
                         <td class="label" align="center"> [[ user.phone ]] </td>
+                        <td><button class="editbtn" align="center">Opciones</button></td>
                       </tr>
+                      
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
+          </div>
+
     
     <script>
       const accordion = document.getElementsByClassName('contentBx');
