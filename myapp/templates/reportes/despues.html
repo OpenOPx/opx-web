@@ -3,136 +3,109 @@
 {% block content %}
 
 <style>
-  .accordion {
-    background-color: #eee;
-    color: #444;
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body
+{
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+}
+.accordion
+{
+    width: 1000px;
+}
+.accordion .contentBx
+{
+    position: relative;
+    margin: 20px 20px;
+    background: #fff;
+    
+}
+.accordion .contentBx .label1
+{
+    position: relative;
+    padding: 10px;
+    background: #fff;
+    color: #000;
     cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-    transition: 0.4s;
-  }
-  
-  .active, .accordion:hover {
-    background-color: #ccc; 
-  }
-  
-  .panel {
-    padding: 0 18px;
-    display: none;
-    background-color: white;
+}
+.accordion .contentBx .label1::before
+{
+    content: '↓';
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+}
+.accordion .contentBx.active .label1::before
+{
+    content: '↑';
+}
+.accordion .contentBx .content
+{
+    position: relative;
+    height: 0;
     overflow: hidden;
-  }
-  </style>
+    transition: 0.25s;
+    overflow-y: auto;
+}
+.accordion .contentBx.active .content
+{
+    height: 222px;
+    padding: 10px;
+}
+</style>
 
-    <div class="container-fluid" id="reportes-despues">
-      <div class="col-lg-8 col-md-3 col-sm-8">
-        <h2 class="card-title ">Miembros equipo _____</h4>
-        <div class="card">
-          <div class="card-body">
-            <table class="table table-hover">
-              <tbody>
-                <button class="accordion">Section 1</button>
-                <div class="panel">
-                  <form name="matriz">
+        <h2 class="card-title ">Miembros equipo _____</h2>
 
-                    <output name="text"> Nombre</output>
-        
-                    <output name="text"> Puntaje</output>
-        
-                    <output name="text"> Estado </output>
-                
-                    <output name="text"> [[ dsff ]]</output>
-        
-                    <output name="text">     [[  sdfs ]]</output>
-        
-                    <output name="text">  [[fdfd ]] </output> <BR>
-                    
-                    <BR>
-        
-                    <output name="text"> Nombre</output>
-        
-                    <output name="text"> Puntaje</output>
-        
-                    <output name="text"> Estado </output><BR>
-        
-                    <output name="text"> [[ dsff ]]</output>
-        
-                    <output name="text">     [[  sdfs ]]</output>
-        
-                    <output name="text">  [[fdfd ]] </output> 
-                            
-                  </form>
+            <div class="accordion">
+              <div class="contentBx">
+                <div class="label1">Informacion usuario1</div>
+                <div class="content">
+                  <table class="table table-hover">
+                    <tbody>
+                      <tr>
+                        <td class="label" align="center"> Nombre </td>
+                        <td class="label" align="center"> Puntaje </td>
+                        <td class="label" align="center"> Estado </td>
+                      </tr>
+                      <tr>
+                        <td class="label" align="center"> [[ user.name ]] </td>
+                        <td class="label" align="center"> [[ user.score ]] </td>
+                        <td class="label" align="center"> [[ user.state ]] </td>
+                      </tr>
+                      <tr>
+                        <td class="label" align="center"> Fecha de nacimiento </td>
+                        <td class="label" align="center"> Empleado </td>
+                        <td class="label" align="center"> Teléfono </td>
+                      </tr>
+                      <tr>
+                        <td class="label" align="center"> [[ user.dateBorn ]] </td>
+                        <td class="label" align="center"> [[ user.job ]] </td>
+                        <td class="label" align="center"> [[ user.phone ]] </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-
-                <button class="accordion">Section 2</button>
-                <div class="panel">
-                  <form name="matriz">
-
-                    <output name="text"> Nombre</output>
-        
-                    <output name="text"> Puntaje</output>
-        
-                    <output name="text"> Estado </output>
-                
-                    <output name="text"> [[ dsff ]]</output>
-        
-                    <output name="text">     [[  sdfs ]]</output>
-        
-                    <output name="text">  [[fdfd ]] </output> <BR>
-                    
-                    <BR>
-        
-                    <output name="text"> Nombre</output>
-        
-                    <output name="text"> Puntaje</output>
-        
-                    <output name="text"> Estado </output><BR>
-        
-                    <output name="text"> [[ dsff ]]</output>
-        
-                    <output name="text">     [[  sdfs ]]</output>
-        
-                    <output name="text">  [[fdfd ]] </output> 
-                            
-                  </form>
-                </div>
-
-                <button class="accordion">Section 3</button>
-                <div class="panel">
-                </div>
-
-                <button class="accordion">Section 4</button>
-                <div class="panel">
-                </div>
-                <script>
-                  var acc = document.getElementsByClassName("accordion");
-                  var i;
-                  
-                  for (i = 0; i < acc.length; i++) {
-                    acc[i].addEventListener("click", function() {
-                      this.classList.toggle("active");
-                      var panel = this.nextElementSibling;
-                      if (panel.style.display === "block") {
-                        panel.style.display = "none";
-                      } else {
-                        panel.style.display = "block";
-                      }
-                    });
-                  }
-                  </script>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-
-    </div>
-
+              </div>
+            </div>
+    
+    <script>
+      const accordion = document.getElementsByClassName('contentBx');
+      for(i=0;i<accordion.length;i++){
+        accordion[i].addEventListener('click',function(){
+          this.classList.toggle('active')
+        })
+      }
+    </script>
 
 
 {% endblock %}
