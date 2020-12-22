@@ -205,7 +205,10 @@ urlpatterns = [
     path('reportes/durante/', estadisticas.estadisticasDuranteView),
     path('reportes/despues/', estadisticas.estadisticasDespuesView),
     path('reportes/<str:proyid>/detalle/', estadisticas.estadisticasDetalleView),
+
     path('reportes/ranking/', estadisticas.rankingView),
+    path('reportes/proyecto/', estadisticas.reportesProyectosIndividualesView),
+    path('reportes/proyectos/', estadisticas.reportesProyectosGeneralesView),
 
     # =========================== Perfil ===============================================
     path('mi-perfil/', views.perfilView)

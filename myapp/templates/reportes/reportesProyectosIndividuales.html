@@ -1,0 +1,112 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    body {  font-family: sans-serif;}
+    
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 2px solid #a2e6ef;
+      background-color: white;
+    }
+    .output {
+    
+    }
+    
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: #a2e6ef;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+      color: #08bcfc;
+    }
+    
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #FFF;
+    }
+    
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #08bcfc;
+      color: white;
+    }
+    
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 2px solid #a2e6ef;
+      border-top: none;
+    }
+    </style>
+    </head>
+
+    <body>
+
+        <h2>Proyecto __</h2>
+        <p>Por si las moscas</p>
+        
+        <div class="tab">
+          <button class="tablinks" onclick="openInfo(event, 'General')">General</button>
+          <button class="tablinks" onclick="openInfo(event, 'Tareas')">Tareas</button>
+          <button class="tablinks" onclick="openInfo(event, 'Comentarios')">Comentarios</button>
+        </div>
+        
+        <div id="General" class="tabcontent">
+            <form name="matriz">
+        
+                    <output class=cssinfo name="INFO"> INFORMACIÓN AQUÍ</output>
+        
+                    <output class=cssfechas name="FECHAS"> FECHAS AQUÍ</output><BR>
+        
+                    <output class=cssdecision name="DECISION"> DECISIÓN AQUÍ</output>
+        
+                    <output class=cssequipos name="EQUIPOS">  EQUIPOS AQUÍ</output> <BR>
+                    
+                    <BR>
+        
+                    <output name="MAPA"> EL MAPA AQUÍ</output>
+        
+            </form>
+        </div>
+        
+        <div id="Tareas" class="tabcontent">
+          <h3>Lo que vaya</h3>
+          <p>Aquí 2</p>
+        </div>
+        
+        <div id="Comentarios" class="tabcontent">
+          <h3>Lo que vaya</h3>
+          <p>Aquí 3</p>
+        </div>
+        
+        <script>
+        function openInfo(evt, whatInfo) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          document.getElementById(whatInfo).style.display = "block";
+          evt.currentTarget.className += " active";
+        }
+        </script>
+           
+        </body>
+
+
+{% endblock %}

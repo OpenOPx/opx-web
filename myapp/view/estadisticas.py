@@ -1336,15 +1336,6 @@ def limpiezaDatos(request, proyid):
 # ================ Vistas ===============
 
 ##
-# @brief Plantilla de estadisticas correspondiente al ranking global de los usuarios
-# @param request instancia HttpRequest
-# @return plantilla HTML
-#
-def rankingView(request):
-
-    return render(request, "reportes/rank2.html")
-
-##
 # @brief Plantilla de estadisticas generales del sistema
 # @param request instancia HttpRequest
 # @return plantilla HTML
@@ -1392,3 +1383,31 @@ def estadisticasDetalleView(request, proyid):
 
 
     return response
+
+##
+# @brief Plantilla de estadisticas correspondiente al ranking global de los usuarios
+# @param request instancia HttpRequest
+# @return plantilla HTML
+#
+def rankingView(request):
+
+    return render(request, "reportes/rank2.html")
+
+##
+# @brief Plantilla de estadisticas correspondiente a los reportes generales de todos los proyectos
+# @param request instancia HttpRequest
+# @return plantilla HTML
+#
+def reportesProyectosGeneralesView(request):
+
+    return render(request, "reportes/reportesProyectosGenerales.html")
+
+
+##
+# @brief Plantilla de estadisticas correspondiente al reporte individual de cada proyecto
+# @param request instancia HttpRequest
+# @return plantilla HTML
+#
+def reportesProyectosIndividualesView(request):
+
+    return render(request, "reportes/reportesProyectosIndividuales.html")
