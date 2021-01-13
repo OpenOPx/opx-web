@@ -1,4 +1,4 @@
-from myapp.models import Usuario
+from myapp.models import User
 import logging
 
 
@@ -6,12 +6,12 @@ class MyAuthBackend(object):
     def authenticate(self, email, password):
 
         try:
-            user = Usuario.objects.filter(useremail__exact = email).filter(password__exact = password)
+            user = User.objects.filter(useremail__exact = email).filter(password__exact = password)
             if user[0]:
                 return user[0]
             else:
                 return None
-        except Usuario.DoesNotExist:
+        except User.DoesNotExist:
             logging.getLogger("error_logger").error("user with login does not exists ")
             return None
         except Exception as e:
@@ -20,10 +20,10 @@ class MyAuthBackend(object):
 
     def get_user(self, user_id):
         try:
-            user = Usuario.objects.get(userid=user_id)
+            user = User.objects.get(userid=user_id)
             if user:
                 return user
             return None
-        except Usuario.DoesNotExist:
+        except User.DoesNotExist:
             logging.getLogger("error_logger").error("user with not found")
             return None

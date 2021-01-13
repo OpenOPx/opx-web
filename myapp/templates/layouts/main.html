@@ -44,6 +44,8 @@
 
   <!-- Estilos App -->
   <link rel="stylesheet" href="{% static 'webpack_bundles/styles.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/opxicesi.css' %}">
 </head>
 
 <body class="">
@@ -71,16 +73,17 @@
             </li>
 
             <!--  ====================Gestión de Usuarios ======================= -->
-            {% if 'e0be3e0e-b127-4fe7-8478-b78a35faf845' in request.session.permisos or '833344ac-cff3-4623-8e9a-ae8be687f801' in request.session.permisos or  '00add5dd-7d17-4c93-b3a7-22ac9a1f3c76' in request.session.permisos %}
+
+            {% if 'c3f73d31-eee2-42cf-853e-a13eac1710d4' in request.session.permisos or '8e7fca15-3247-447e-af12-17af05af88a8' in request.session.permisos or '1869050a-e479-49a4-a77f-7e54172c887f' in request.session.permisos or '440fe8eb-c514-4316-a1c6-01b6316c808c' in request.session.permisos or '4fafbfaf-4aba-47c6-ad65-82ff1c34eed9' in request.session.permisos or '5363ae94-3606-4077-a0a0-009c3deec539' in request.session.permisos or '63664cdd-3ecd-4ece-b8b8-723c02d0f53d' in request.session.permisos or '757af02b-f3bb-45ff-b57a-52354074a104' in request.session.permisos or '8e7fca15-3247-447e-af12-17af05af88a8' in request.session.permisos or 'def9ed68-4c55-4342-b672-8adb9dd7faa5' in request.session.permisos or 'f961def1-ab3a-48ad-90e2-caa4be807edf' in request.session.permisos or 'fa0af04f-3bd2-47df-876f-121f30b43aa4' in request.session.permisos %}
               <li class="nav-item ">
                 <a class="nav-link" data-toggle="collapse" href="#collapse-usuarios">
                   <i class="material-icons">person</i>
-                  <p>Usuarios</p>
+                  <p class="icesi-toggle">Usuarios</p>
                 </a>
                 <div class="collapse submenu" id="collapse-usuarios">
                   <ul class="nav">
                     <!-- ============= Usuarios =================== -->
-                    {% if 'e0be3e0e-b127-4fe7-8478-b78a35faf845' in request.session.permisos %}
+                    {% if 'c3f73d31-eee2-42cf-853e-a13eac1710d4' in request.session.permisos and '2d119106-86c9-461a-86fd-28b16770b966' in request.session.permisos and '8b6dca98-9245-453d-9b03-2f0a81537d8f' in request.session.permisos and '14a22aa4-2f67-412b-864c-257426e25d85' in request.session.permisos %}
                       <li class="nav-item">
                         <a class="nav-link" href="/usuarios">
                           <i class="material-icons">dashboard</i>
@@ -88,8 +91,7 @@
                         </a>
                       </li>
                     {% endif %}
-                    {% if '833344ac-cff3-4623-8e9a-ae8be687f801' in request.session.permisos %}
-                      <!--  -->
+                    {% if '440fe8eb-c514-4316-a1c6-01b6316c808c' in request.session.permisos and 'd3bf7602-c551-43a6-9f41-9bb19f7a705e' in request.session.permisos and '32c64f33-ae14-49cc-9726-4c5a1cefa76e' in request.session.permisos and 'fc6f0a0a-430b-4cc8-881b-fe0fe146e8a1' in request.session.permisos %}                      <!--  -->
                       <li class="nav-item  ">
                         <a class="nav-link" href="/equipos/">
                           <i class="material-icons">dashboard</i>
@@ -97,8 +99,7 @@
                         </a>
                       </li>
                     {% endif %}
-                    {% if '00add5dd-7d17-4c93-b3a7-22ac9a1f3c76' in request.session.permisos %}
-                      <!-- Roles -->
+                    {% if '1869050a-e479-49a4-a77f-7e54172c887f' in request.session.permisos and '9c9d6559-772b-4e74-9bc6-53316b3a700b' in request.session.permisos and '3f35a65d7-0388-49fb-8df8-31644e6bdf51' in request.session.permisos and 'dab5c2c4-c840-46b6-9c62-33bc3feca7af' in request.session.permisos %}                      <!-- Roles -->
                       <li class="nav-item ">
                         <a class="nav-link" href="/roles">
                           <i class="material-icons">person</i>
@@ -112,8 +113,7 @@
             {% endif %}
 
             <!-- ============= Gestión de decisiones =================== -->
-            {% if '07225737-ca27-4f9a-bae9-1be6bfe8d15c' in request.session.permisos %}
-              <li class="nav-item ">
+            {% if '8e7fca15-3247-447e-af12-17af05af88a8' in request.session.permisos and '15521311-dea6-4a0b-800f-32ba02c806cb' in request.session.permisos and '69cfe22b-44bf-4b81-96a1-600d3d44282a' in request.session.permisos and '2d177936-527b-43c8-a213-c42a31e24440' in request.session.permisos %}              <li class="nav-item ">
                 <a class="nav-link" href="/decisiones">
                   <i class="material-icons">library_books</i>
                   <p>Decisiones</p>
@@ -122,8 +122,7 @@
             {% endif %}
 
             <!-- ========================== Gestión de Contextos =================== -->
-            {% if 'cf49d486-f6fe-4667-b155-51eda0fb7382' in request.session.permisos %}
-              <li class="nav-item ">
+            {% if '63664cdd-3ecd-4ece-b8b8-723c02d0f53d' in request.session.permisos and 'cf2af34e-a001-4c3c-aaf3-a628fce5b08e' in request.session.permisos and '0c35ad42-1925-4a4d-87ad-83a0b40cbb0f' in request.session.permisos and '2b1a52de-f74f-4882-9f85-0394c56629f1' in request.session.permisos %}              <li class="nav-item ">
                 <a class="nav-link" href="/contextos">
                   <i class="material-icons">library_books</i>
                   <p>Contextos</p>
@@ -132,38 +131,37 @@
             {% endif %}
 
             <!-- ========================== Gestión de Proyectos ================================ -->
-            {% if '0ff17033-7e9a-4f6d-a66b-b80b69860ec0' in request.session.permisos or '2f5bfac3-782e-4926-8e9f-88df72403a18' in request.session.permisos or '088f2967-a3fd-4074-b103-80e6c9dfe7e2' in request.session.permisos %}
+            {% if 'c3f73d31-eee2-42cf-853e-a13eac1710d4' in request.session.permisos or '8e7fca15-3247-447e-af12-17af05af88a8' in request.session.permisos or '1869050a-e479-49a4-a77f-7e54172c887f' in request.session.permisos or '440fe8eb-c514-4316-a1c6-01b6316c808c' in request.session.permisos or '4fafbfaf-4aba-47c6-ad65-82ff1c34eed9' in request.session.permisos or '5363ae94-3606-4077-a0a0-009c3deec539' in request.session.permisos or '63664cdd-3ecd-4ece-b8b8-723c02d0f53d' in request.session.permisos or '757af02b-f3bb-45ff-b57a-52354074a104' in request.session.permisos or '8e7fca15-3247-447e-af12-17af05af88a8' in request.session.permisos or 'def9ed68-4c55-4342-b672-8adb9dd7faa5' in request.session.permisos or 'f961def1-ab3a-48ad-90e2-caa4be807edf' in request.session.permisos or 'fa0af04f-3bd2-47df-876f-121f30b43aa4' in request.session.permisos %}
               <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#collapse-proyectos">
                   <i class="material-icons">dashboard</i>
-                  <p>Proyectos</p>
+                  <p class="icesi-toggle">Proyectos</p>
                 </a>
                 <div class="collapse submenu" id="collapse-proyectos">
                   <ul class="nav">
                     <!-- =================== Proyectos ================== -->
-                    {% if '0ff17033-7e9a-4f6d-a66b-b80b69860ec0' in request.session.permisos %}
-                      <li class="nav-item">
+                    {% if 'f961def1-ab3a-48ad-90e2-caa4be807edf' in request.session.permisos and '96ea710f-af37-42cb-8634-cbfb7bcc9866' in request.session.permisos and '36817938-3e88-4c69-8fcd-1a2937f0f3f1' in request.session.permisos and '32c43d05-a424-4b3e-ab86-05abb00912b0' in request.session.permisos %}                      <li class="nav-item">
                         <a class="nav-link" href="/proyectos/">
                           <i class="material-icons">dashboard</i>
                           <p>Listado</p>
                         </a>
                       </li>
                     {% endif %}
-                    {%if '2f5bfac3-782e-4926-8e9f-88df72403a18' in request.session.permisos %}
-                      <!-- ======================== Gestión de Cambios =========================== -->
+                    {% if 'fa0af04f-3bd2-47df-876f-121f30b43aa4' in request.session.permisos and '86a3f27d-466f-4e2b-80c3-99d7fc04cd6b' in request.session.permisos and '9ad7bfec-dd66-4419-bc04-de71314c7348' in request.session.permisos and '1e01ed5c-898a-47e2-b999-a9b3c541fee6' in request.session.permisos %}                      
+                    <!-- ======================== Gestión de Cambios =========================== -->
                       <li class="nav-item  ">
                         <a class="nav-link" href="/proyectos/gestion/">
                           <i class="material-icons">dashboard</i>
-                          <p>Gestión de Cambios</p>
+                          <p>Gestión de cambios</p>
                         </a>
                       </li>
                     {% endif %}
-                    {%if '088f2967-a3fd-4074-b103-80e6c9dfe7e2' in request.session.permisos %}
+                    {% if '5363ae94-3606-4077-a0a0-009c3deec539' in request.session.permisos and '04514ded-7a1b-4522-bd08-acaac4bceab5' in request.session.permisos and '1e82cd91-8faf-4552-ab72-71d967d0b29c' in request.session.permisos and '4a26fa11-8e37-4ada-8432-874e6daa85d6' in request.session.permisos %}
                       <!-- ======================== Tipos de Proyecto =========================== -->
                       <li class="nav-item">
                         <a class="nav-link" href="/tipos-proyecto/">
                           <i class="material-icons">dashboard</i>
-                          <p>Tipos de Proyecto</p>
+                          <p>Tipos de proyecto</p>
                         </a>
                       </li>
                     {% endif %}
@@ -173,8 +171,7 @@
             {% endif %}
 
             <!-- =================== Gestión de instrumentos ========================== -->
-            {% if 'dd9a202b-3c2c-4a69-97b6-1c13b8f4792f' in request.session.permisos %}
-              <li class="nav-item">
+            {% if '4fafbfaf-4aba-47c6-ad65-82ff1c34eed9' in request.session.permisos and '21eda5d7-ab78-4964-83d0-4643f54c088c' in request.session.permisos and '39aca98e-3ade-4f75-8842-3dbadd25a8e8' in request.session.permisos and '1a16e258-2b7f-4620-b736-d923b40e275f' in request.session.permisos %}              <li class="nav-item">
                 <a class="nav-link" href="/instrumentos">
                   <i class="material-icons">content_paste</i>
                   <p>Instrumentos</p>
@@ -183,7 +180,7 @@
             {% endif %}
 
             <!-- ===================== Gestión de Tareas ====================== -->
-            {% if '1f471664-7209-4053-85f5-e49cd506e9d9' in request.session.permisos %}
+            {% if '757af02b-f3bb-45ff-b57a-52354074a104' in request.session.permisos and '21b6c6ad-0440-4760-b936-b0c2a9b34719' in request.session.permisos and '23ce5132-9988-4292-bdd2-d9171825d412' in request.session.permisos and '69633223-eb30-4773-840f-d36c2ad71921' in request.session.permisos %}
               <li class="nav-item ">
                 <a class="nav-link" href="/tareas">
                   <i class="material-icons">person</i>
@@ -193,7 +190,7 @@
             {% endif %}
 
             <!-- =========================== Reportes ===================== -->
-            {% if '75a42144-766e-4696-b385-a266425a5aaa' in request.session.permisos %}
+            {% if 'def9ed68-4c55-4342-b672-8adb9dd7faa5' in request.session.permisos %}
 
               <!-- Subtítulo -->
               <li class="subtitulo-menu">
@@ -204,27 +201,27 @@
               <li class="nav-item ">
                 <a class="nav-link" data-toggle="collapse" href="#collapse-reportes" aria-expanded="true" aria-controls="collapse-reportes">
                   <i class="material-icons">bar_chart</i>
-                  <p>Reportes</p>
+                  <p class="icesi-toggle">Reportes</p>
                 </a>
                 <div class="collapse submenu" id="collapse-reportes">
                   <ul class="nav">
                     <li class="nav-item ">
-                      <a class="nav-link" href="/reportes/antes/">
-                        <i class="material-icons">bar_chart</i>
-                        <p>Antes</p>
+                      <a class="nav-link" href="/reportes/equipos/">
+                        <i class="material-icons">supervised_user_circle</i>
+                        <p>Usuarios</p>
                       </a>
                     </li>
 
                     <li class="nav-item ">
-                      <a class="nav-link" href="/reportes/durante/">
-                        <i class="material-icons">bar_chart</i>
-                        <p>Durante</p>
+                      <a class="nav-link" href="/reportes/proyectos/">
+                        <i class="material-icons">dashboard</i>
+                        <p>Proyectos</p>
                       </a>
                     </li>
                     <li class="nav-item ">
-                      <a class="nav-link" href="/reportes/despues/">
-                        <i class="material-icons">bar_chart</i>
-                        <p>Después</p>
+                      <a class="nav-link" href="/reportes/ranking/">
+                        <i class="material-icons">leaderboard</i>
+                        <p>Ranking</p>
                       </a>
                     </li>
                   </ul>
@@ -498,6 +495,8 @@
   <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>-->
 
   <script src="{% static 'webpack_bundles/main.js' %}"></script>
+
+  <script src="{% static 'js/icesijs.js' %}"></script>
 
   <!--  <script src="http://pruebasneuro.co/prueba/cookies.js"></script>-->
 

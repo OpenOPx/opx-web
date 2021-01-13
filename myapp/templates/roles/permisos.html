@@ -12,8 +12,8 @@
               <div class="card">
                 <div class="card-header card-header-primary">
                   <button class="btn button-right" data-target="#agregar-permiso" data-toggle="modal">Asignar Permiso</button>
-                  <h4 class="card-title ">{{ rol.rolname }}</h4>
-                  <p class="card-category"> Gestión de Rol {{ rol.rolname }} </p>
+                  <h4 class="card-title ">{{ rol.role_name }}</h4>
+                  <p class="card-category"> Gestión de Rol {{ rol.role_name }} </p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -27,7 +27,7 @@
                       <tbody>
                         <tr v-for="permiso in permisos">
                           <td>
-                            [[ permiso.nombre ]]
+                            [[ permiso.perm_name ]]
                           </td>
                           <td>
                             <div class="dropdown">
@@ -35,7 +35,7 @@
 
                               </a>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a @click="eliminarPermiso(permiso.funcrolid)" class="dropdown-item" href="#"> Eliminación </a>
+                                <a @click="eliminarPermiso(permiso.perm_id, permiso.role_id)" class="dropdown-item" href="#"> Eliminación </a>
                               </div>
                             </div>
                           </td>
@@ -69,7 +69,7 @@
                           <label class="bmd-label-floating">Acción</label>
                           <select v-model="almacenamientoPermiso.accionid" class="form-control">
                             <option value=""> Seleccione </option>
-                            <option v-for="accion in acciones" :value="accion.accionid"> [[ accion.nombre ]] </option>
+                            <option v-for="accion in acciones" :value="accion.perm_id"> [[ accion.perm_name ]] </option>
                           </select>
                         </div>
                       </div>
@@ -101,18 +101,18 @@
                       <div class="col-md-12">
                         <div class="form-group">
                           <label class="bmd-label-floating">Nombre</label>
-                          <input v-model="edicionRol.rolname" type="text" class="form-control">
+                          <input v-model="edicionRol.role_name" type="text" class="form-control">
                         </div>
                       </div>
                       <div class="col-md-12">
                         <div class="form-group">
                           <label class="bmd-label-floating">Descripción</label>
-                          <textarea v-model="edicionRol.roldescripcion" class="form-control"></textarea>
+                          <textarea v-model="edicionRol.role_description" class="form-control"></textarea>
                         </div>
                       </div>
                       <div align="center" class="col-md-12">
                         <div class="form-group">
-                          <button :disabled="!edicionRol.rolname || !edicionRol.roldescripcion" class="btn" @click="editarRol()" type="button">Editar</button>
+                          <button :disabled="!edicionRol.role_name || !edicionRol.role_descritcion" class="btn" @click="editarRol()" type="button">Editar</button>
                         </div>
                       </div>
                     </div>

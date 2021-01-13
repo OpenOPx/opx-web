@@ -4,12 +4,14 @@ let instrumento = new Vue({
     created(){
 
         if(window.location.pathname == '/instrumentos/'){
-
+            this.getKoboUrl();
+            this.listadoTiposDeTareas();
             this.listadoInstrumentos();
         }
     },
     data: {
         instrumentos: [],
+        tiposTareas: [],
         almacenamientoInstrumento: {},
         edicionInstrumento: {},
         fase1: true,
@@ -21,7 +23,7 @@ let instrumento = new Vue({
         // Paginación
         pagination: {
             currentPage: 1,
-            perPage: 5
+            perPage: 10
         },
         // Busqueda
         filter: '',
@@ -29,17 +31,17 @@ let instrumento = new Vue({
         instrumentosFields: [
             {
                 label: 'Tipo',
-                key: 'instrtipo',
+                key: 'instrument_type',
                 sortable: true
             },
             {
                 label: 'Nombre',
-                key: 'instrnombre',
+                key: 'instrument_name',
                 sortable: true
             },
             {
                 label: 'Descripción',
-                key: 'instrdescripcion',
+                key: 'instrument_description',
                 sortable: true
             },
             {
@@ -47,9 +49,21 @@ let instrumento = new Vue({
                 key: 'acciones'
             }
         ],
-        kpiUrl: kpiUrl
+        kpiUrl: "",
     },
     methods: {
+        getKoboUrl(){
+            axios({
+                method: 'GET',
+                url: '/external-platforms/kobo-kpi/',
+                headers: {
+                    Authorization: getToken()
+                }
+            })
+            .then(response => {
+                this.kpiUrl = "http://"+response.data.kpiUrl
+            })
+        },
         listadoInstrumentos(){
 
             this.loader(true);
@@ -64,6 +78,20 @@ let instrumento = new Vue({
             .then(response => {
 
               this.instrumentos = response.data;
+              this.loader(false);
+            });
+        },
+        listadoTiposDeTareas(){
+            axios({
+                method: 'GET',
+                url: '/tareas/tipos/',
+                headers: {
+                    Authorization: getToken()
+                }
+            })
+            .then(response => {
+
+              this.tiposTareas = response.data;
               this.loader(false);
             });
         },
@@ -243,7 +271,7 @@ let instrumento = new Vue({
 
             axios({
                 method: 'post',
-                url: '/instrumentos/' + this.edicionInstrumento.instrid,
+                url: '/instrumentos/' + this.edicionInstrumento.instrument_id,
                 data: queryString,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -360,8 +388,6 @@ let instrumento = new Vue({
             })
         },
         async informacionEncuesta(id){
-
-            this.loader(true);
 
             await this.verificarImplementacionEncuesta(id)
             .then(response => {

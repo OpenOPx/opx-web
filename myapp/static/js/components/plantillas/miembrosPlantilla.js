@@ -9,7 +9,19 @@ miembrosPlantilla = new Vue({
         teamFields: [
             {
                 label: 'Nombre',
-                key: 'userfullname'
+                key: 'pers_name'
+            },
+            {
+                label: 'Apellido',
+                key: 'pers_lastname'
+            },
+            {
+                label: 'Barrio',
+                key: 'neighb_name'
+            },
+            {
+                label: 'Puntaje',
+                key: 'pers_score'
             },
             {
                 label: '',
@@ -19,7 +31,7 @@ miembrosPlantilla = new Vue({
         // Paginación Equipo
         paginationTeam: {
             currentPage: 1,
-            perPage: 3
+            perPage: 10
         },
         // Búsqueda Equipo
         filterTeam: '',
@@ -27,7 +39,19 @@ miembrosPlantilla = new Vue({
         availableUserFields: [
             {
                 label: 'Nombre',
-                key: 'userfullname'
+                key: 'pers_name'
+            },
+            {
+                label: 'Apellido',
+                key: 'pers_lastname'
+            },
+            {
+                label: 'Barrio',
+                key: 'neighb_name'
+            },
+            {
+                label: 'Puntaje',
+                key: 'pers_score'
             },
             {
                 label: '',
@@ -36,16 +60,16 @@ miembrosPlantilla = new Vue({
         ],
         paginationAvailableUsers: {
             currentPage: 1,
-            perPage: 3
+            perPage: 10
         },
         // Busqueda usuarios disponibles
-        filterAvailableUsers: ''
+        filterAvailableUsers: '',
+        loading: false
     },
     created(){
-
         window.setTimeout(() => {
             if(window.location.pathname.substr(1, 7) == "equipos" && window.location.pathname.substr(46, 8) == "miembros"){
-            
+                this.plantillaID = window.location.pathname.substr(9, 36);
                 this.listadoMiembros();
                 this.listadoUsuariosDisponibles();
             }
@@ -54,69 +78,70 @@ miembrosPlantilla = new Vue({
     },
     methods: {
         listadoMiembros(){
-
             axios({
-                url: '/miembros-plantilla/' + this.plantillaID + '/list/',
+                url: '/miembros-plantilla/' + window.location.pathname.substr(9, 36) + '/list/',
                 method: 'GET',
                 headers: {
                     Authorization: getToken()
                 }
             })
             .then(response => {
-
                 if(response.data.code == 200 && response.data.status == 'success'){
-
                     this.miembrosPlantilla = response.data.data;
                 }
             });
         },
         listadoUsuariosDisponibles(){
-
+            this.loader(true)
             axios({
-                url: '/miembros-plantilla/' + this.plantillaID + '/usuarios-disponibles/',
+                url: '/miembros-plantilla/' + window.location.pathname.substr(9, 36) + '/usuarios-disponibles/',
                 method: 'GET',
                 headers: {
                     Authorization: getToken()
                 }
             })
             .then(response => {
-
+                this.loader(false)
                 if(response.data.code == 200 && response.data.status == 'success'){
 
                     this.usuariosDisponibles = response.data.data;
                 }
+            }).catch(()=>{
+                this.loader(false)
             });
         },
         agregarIntegrante(userid){
-
+            this.loader(true)
             axios({
-                url: '/miembros-plantilla/' + this.plantillaID + '/store/',
+                url: '/miembros-plantilla/' + window.location.pathname.substr(9, 36) + '/store/',
                 method: 'POST',
-                data: 'userid=' + userid,
+                data: 'usuarioId=' + userid,
                 headers: {
                     Authorization: getToken(),
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             })
             .then(response => {
-
+                this.loader(false)
                 if(response.data.code == 201 && response.data.status == 'success'){
 
                     this.listadoMiembros();
                     this.listadoUsuariosDisponibles();
                 }
+            }).catch(()=> {
+                this.loader(false)
             });
         },
         eliminarIntegrante(miplid){
 
             Swal.fire({
-                text: 'Estas seguro?',
+                text: '¿Estas seguro?',
                 showCancelButton: true
             })
             .then(result => {
 
                 if(result.value){
-
+                    this.loader(true)
                      axios({
                         url: '/miembros-plantilla/' + miplid + '/delete/',
                         method: 'DELETE',
@@ -125,7 +150,7 @@ miembrosPlantilla = new Vue({
                         }
                     })
                     .then(response => {
-
+                        this.loader(false)
                         if(response.data.code == 200 && response.data.status == 'success'){
 
                             this.listadoMiembros();
@@ -137,9 +162,14 @@ miembrosPlantilla = new Vue({
                                 'success'
                             )
                         }
+                    }).catch(()=>{
+                        this.loader(false)
                     })
                 }
             });
+        },
+        loader(status){
+            this.loading = status;
         }
     },
     computed: {

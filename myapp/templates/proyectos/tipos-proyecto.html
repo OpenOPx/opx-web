@@ -30,10 +30,10 @@
                   <tbody>
                     <tr v-for="tp in tiposProyecto">
                       <td>
-                        [[ tp.nombre ]]
+                        [[ tp.projtype_name ]]
                       </td>
                       <td>
-                        [[ tp.descripcion ]]
+                        [[ tp.projtype_description ]]
                       </td>
                       <td>
                         <div class="dropdown">
@@ -42,7 +42,7 @@
                           </a>
                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a @click.prevent="edicionTipoProyecto = tp" data-toggle="modal" data-target="#editar-tipo-proyecto" class="dropdown-item" href="#"> Edición </a>
-                            <a @click.prevent="eliminarTipoProyecto(tp.tiproid)" class="dropdown-item" href="#"> Eliminación </a>
+                            <a @click.prevent="eliminarTipoProyecto(tp.projtype_id)" class="dropdown-item" href="#"> Eliminación </a>
                           </div>
                         </div>
                       </td>
@@ -126,7 +126,7 @@
 
                       <div align="center" class="col-md-12">
                         <div class="form-group">
-                          <button :disabled="!edicionTipoProyecto.nombre || !edicionTipoProyecto.descripcion" class="btn" @click="editarTipoProyecto()" type="button">Editar</button>
+                          <button :disabled="!edicionTipoProyecto.nombre || !edicionTipoProyecto.descripcion" class="btn" @click="editarTipoProyecto(edicionTipoProyecto.projtype_id)" type="button">Editar</button>
                         </div>
                       </div>
                     </div>

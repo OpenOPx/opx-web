@@ -2,6 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.forms.models import model_to_dict
 from django.http.response import JsonResponse
 from django.shortcuts import render
+from myapp import models
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import (
@@ -9,7 +10,9 @@ from rest_framework.permissions import (
     IsAuthenticated
 )
 
-from myapp.models import TipoProyecto
+from myapp import models
+
+from myapp.models import ProjectType
 
 ##
 # @brief Recurso que provee el listado de Tipos de proyecto disponibles
@@ -20,7 +23,7 @@ from myapp.models import TipoProyecto
 @permission_classes((IsAuthenticated,))
 def listadoTiposProyecto(request):
 
-    tiposProyecto = TipoProyecto.objects.all().values()
+    tiposProyecto = models.ProjectType.objects.all().values()
 
     response = {
         'code': 200,
@@ -43,7 +46,7 @@ def almacenamientoTiposProyecto(request):
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
 
-        tipoProyecto = TipoProyecto(nombre=nombre, descripcion=descripcion)
+        tipoProyecto = models.ProjectType(projtype_name=nombre, projtype_description=descripcion)
         tipoProyecto.full_clean()
         tipoProyecto.save()
 
@@ -73,10 +76,10 @@ def almacenamientoTiposProyecto(request):
 def edicionTipoProyecto(request, tiproid):
 
     try:
-        tipoProyecto = TipoProyecto.objects.get(pk=tiproid)
+        tipoProyecto = ProjectType.objects.get(projtype_id=tiproid)
 
-        tipoProyecto.nombre = request.POST.get('nombre')
-        tipoProyecto.descripcion = request.POST.get('descripcion')
+        tipoProyecto.projtype_name = request.POST.get('nombre')
+        tipoProyecto.projtype_description = request.POST.get('descripcion')
 
         tipoProyecto.full_clean()
         tipoProyecto.save()
@@ -119,7 +122,7 @@ def edicionTipoProyecto(request, tiproid):
 def eliminarTipoProyecto(request, tiproid):
 
     try:
-        tipoProyecto = TipoProyecto.objects.get(pk=tiproid)
+        tipoProyecto = ProjectType.objects.get(projtype_id=tiproid)
         tipoProyecto.delete()
 
         response = {

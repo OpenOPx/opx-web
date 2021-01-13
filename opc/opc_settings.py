@@ -1,12 +1,12 @@
-from myapp.models import Parametro
+from myapp.models import Params
 
 def getDBSettings():
 
-    parametros = Parametro.objects.all()
+    parametros = Params.objects.all()
     settings = {}
 
     for p in parametros:
-        settings[p.paramid] = p.paramvalor
+        settings[p.params_id] = p.params_value
 
     return settings
 

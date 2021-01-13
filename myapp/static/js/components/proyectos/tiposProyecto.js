@@ -64,8 +64,7 @@ tiposProyecto = new Vue({
                 }
             });
         },
-        editarTipoProyecto(){
-
+        editarTipoProyecto(ids){
             queryString = Object.keys(this.edicionTipoProyecto).map(key => {
 
                 return key + "=" + this.edicionTipoProyecto[key];
@@ -73,7 +72,7 @@ tiposProyecto = new Vue({
             .join('&');
 
             axios({
-                url: '/tipos-proyecto/' + this.edicionTipoProyecto.tiproid,
+                url: '/tipos-proyecto/' + ids,
                 method: 'POST',
                 data: queryString,
                 headers: {

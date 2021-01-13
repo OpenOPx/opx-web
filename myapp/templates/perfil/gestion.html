@@ -11,8 +11,8 @@
                 </div>
                 <div id="info">
                     <p>
-                        [[ informacionUsuario.userfullname ]]
-                        <span> [[ informacionUsuario.rolname ]] </span>
+                        [[ informacionUsuario.pers_name + " " +informacionUsuario.pers_lastname]]
+                        <span> [[ informacionUsuario.role_name ]] </span>
                     </p>
                 </div>
                 <ul id="acciones">
@@ -50,10 +50,16 @@
                 <!-- Formulario -->
                 <form action="">
                     <div class="row">
-                      <div class="col-md-12">
+                      <div class="col-md-6">
                         <div class="form-group">
                           <label class="bmd-label-floating">Nombre</label>
-                          <input v-model="informacionUsuario.userfullname" type="text" class="form-control">
+                          <input v-model="informacionUsuario.pers_name" type="text" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Apellido</label>
+                          <input v-model="informacionUsuario.pers_lastname" type="text" class="form-control">
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -65,7 +71,43 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label for="" class="bmd-label-floating">Teléfono</label>
-                          <input class="form-control" type="text" v-model="informacionUsuario.telefono"/>
+                          <input class="form-control" type="text" v-model="informacionUsuario.pers_telephone"/>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Fecha de Nacimiento</label>
+                          <input v-model="informacionUsuario.pers_birthdate" type="date" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Género</label>
+                          <select v-model="informacionUsuario.gender_id" class="form-control">
+                            <option value=-1>Seleccione</option>
+                            <option v-for="genero in generos" :value="genero.gender_id"> [[ genero.gender_name ]] </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Barrio</label>
+                          <select v-model="informacionUsuario.neighborhood_id" class="form-control">
+                            <option value=-1>Seleccione</option>
+                            <option v-for="barrio in barrios" :value="barrio.neighb_id"> [[ barrio.neighb_name ]] </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Nivel Educativo</label>
+                          <select v-model="informacionUsuario.education_level_id" class="form-control">
+                            <option value=-1>Seleccione</option>
+                            <option v-for="ne in nivelesEducativos" :value="ne.educlevel_id"> [[ ne.educlevel_name ]]
+                            </option>
+                          </select>
                         </div>
                       </div>
                       <div class="col-md-12">
@@ -84,7 +126,11 @@
                         </div>
                       </div>
                       <div class="col-md-12">
-                          <button :disabled="!this.informacionUsuario.userfullname || !this.informacionUsuario.useremail || !this.informacionUsuario.telefono" @click="actualizarInformacion()" type="button" class="btn btn-success">Guardar cambios</button>
+                          <button :disabled="!this.informacionUsuario.pers_name || !this.informacionUsuario.pers_lastname || 
+                          !this.informacionUsuario.useremail || !this.informacionUsuario.pers_telephone || 
+                          !this.informacionUsuario.pers_birthdate || this.informacionUsuario.education_level_id ==-1 || 
+                          this.informacionUsuario.neighborhood_id ==-1 || this.informacionUsuario.gender_id ==-1" 
+                          @click="actualizarInformacion()" type="button" class="btn btn-success">Guardar cambios</button>
                       </div>
                     </div>
                  </form>

@@ -28,10 +28,10 @@
                       <tbody>
                         <tr v-for="rol in roles">
                           <td>
-                            [[ rol.rolname ]]
+                            [[ rol.role_name ]]
                           </td>
                           <td class="text-primary">
-                            [[ rol.roldescripcion  ]]
+                            [[ rol.role_description  ]]
                           </td>
                           <td>
                             <div class="dropdown">
@@ -41,7 +41,7 @@
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <!--<a @click.prevent="edicionRol = rol" data-toggle="modal" data-target="#editar-rol" class="dropdown-item" href="#"> Edición </a>
                                 <a @click.prevent="eliminarRol(rol.rolid)" class="dropdown-item" href="#"> Eliminación </a>-->
-                                <a :href="'/roles/permisos/' + rol.rolid" class="dropdown-item" > Permisos </a>
+                                <a :href="'/roles/permisos/' + rol.role_id" class="dropdown-item" > Permisos </a>
                               </div>
                             </div>
                           </td>

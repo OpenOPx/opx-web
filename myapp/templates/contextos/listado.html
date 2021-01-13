@@ -5,7 +5,7 @@
     <div id="gestion-contextos" class="container-fluid">
 
       <div :class="{loading:loading}"></div>
-
+ 
       <!-- Contextos -->
       <div class="row">
         <div class="col-md-12">
@@ -13,7 +13,7 @@
             <div class="card-header card-header-primary">
               <button class="btn button-right" data-target="#agregar-contexto" data-toggle="modal">Crear Contexto</button>
               <h4 class="card-title ">Contextos</h4>
-              <p class="card-category"> Gestión de Contextos </p>
+              <h5 class="card-category">Conjunto de circunstancias que rodean una situación y sin las cuales no se puede comprender correctamente.</h5>
             </div>
             <div class="card-header">
               <form action="">
@@ -34,7 +34,7 @@
                   <tbody>
                     <tr v-for="contexto in contextos">
                       <td>
-                        [[ contexto.descripcion ]]
+                        [[ contexto.context_description ]]
                       </td>
                        <td>
                           <div class="dropdown">
@@ -43,8 +43,8 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                               <a  @click.prevent="edicionContexto = contexto" data-toggle="modal" data-target="#editar-contexto" class="dropdown-item" href="#"> Edición </a>
-                              <a @click.prevent="eliminarContexto(contexto.contextoid)" class="dropdown-item" href="#"> Eliminación </a>
-                              <a class="dropdown-item" :href="'/contextos/datos/' + contexto.contextoid"> Datos </a>
+                              <a @click.prevent="eliminarContexto(contexto.context_id)" class="dropdown-item" href="#"> Eliminación </a>
+                              <a class="dropdown-item" :href="'/contextos/datos/' + contexto.context_id "> Datos </a>
                             </div>
                           </div>
                         </td>
@@ -65,8 +65,8 @@
                       </a>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a  @click.prevent="edicionContexto = data.item" data-toggle="modal" data-target="#editar-contexto" class="dropdown-item" href="#"> Edición </a>
-                        <a @click.prevent="eliminarContexto(data.item.contextoid)" class="dropdown-item" href="#"> Eliminación </a>
-                        <a class="dropdown-item" :href="'/contextos/datos/' + data.item.contextoid"> Datos </a>
+                        <a @click.prevent="eliminarContexto(data.item.context_id)" class="dropdown-item" href="#"> Eliminación </a>
+                        <a class="dropdown-item" :href="'/contextos/datos/' + data.item.context_id"> Datos </a>
                       </div>
                     </div>
                   </template>

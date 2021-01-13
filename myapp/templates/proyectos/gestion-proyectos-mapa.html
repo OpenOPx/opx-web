@@ -2,18 +2,18 @@
 
 {% block content %}
 
-    <div class="container-fluid" id="gestion-proyectos-mapa">
+<div class="container-fluid" id="gestion-proyectos-mapa">
 
-        <div :class="{loading:loading}"></div>
+    <div :class="{loading:loading}"></div>
 
-        <!-- Equipo del proyecto -->
-        <div class="col-md-12">
-          <div class="card">
+    <!-- Equipo del proyecto -->
+    <div class="col-md-12">
+        <div class="card">
             <div class="card-header card-header-primary">
-              <h4 class="card-title "> Gestión de Proyecto </h4>
-              <p class="card-category"> Gestión </p>
+                <h4 class="card-title "> Gestión de Proyecto </h4>
+                <p class="card-category"> Gestión </p>
             </div>
-              
+
             <div class="card-body">
 
             </div>
@@ -23,9 +23,10 @@
                 <form action="" class="form-horizontal">
                     <div class="form-group">
                         <label for="">Seleccione Un Proyecto</label>
-                        <select v-model="informacionProyecto" @change="cargarInformacionProyecto(informacionProyecto)" name="" id="" class="form-control">
+                        <select v-model="informacionProyecto" @change="cargarInformacionProyecto(informacionProyecto)"
+                            name="" id="" class="form-control">
                             <option value="">Seleccione un Proyecto</option>
-                            <option v-for="proyecto in proyectos" :value="proyecto"> [[ proyecto.proynombre ]] </option>
+                            <option v-for="proyecto in proyectos" :value="proyecto"> [[ proyecto.proj_name ]] </option>
                         </select>
                     </div>
                 </form>
@@ -34,19 +35,23 @@
                     <div id="container-mapa-gestion-cambios">
                         <div id="map"></div>
                         <div id="fab-gestion-cambios">
-                            <button v-if="acciones.territorio" @click="gestionTerritorioProyecto()" class="btn btn-info btn-social btn-just-icon btn-round">
+                            <button v-if="acciones.territorio" @click="gestionTerritorioProyecto()"
+                                class="btn btn-info btn-social btn-just-icon btn-round">
                                 <i class="material-icons">my_location</i>
                                 <div class="ripple-container"></div>
                             </button>
-                            <button v-if="acciones.tiempo" @click="gestionTiempoProyecto()" class="btn btn-info btn-social btn-just-icon btn-round">
-                                <i class="material-icons">access_time</i>
+                            <button v-if="acciones.tiempo" @click="gestionTiempoProyecto()"
+                                class="btn btn-info btn-social btn-just-icon btn-round">
+                                <i class="material-icons">date_range</i>
                                 <div class="ripple-container"></div>
                             </button>
-                            <button v-if="acciones.objetivo" @click="gestionObjetivoProyecto()" class="btn btn-info btn-social btn-just-icon btn-round">
-                                <i class="material-icons">done</i>
+                            <button v-if="acciones.objetivo" @click="gestionObjetivoProyecto()"
+                                class="btn btn-info btn-social btn-just-icon btn-round">
+                                <i class="material-icons">assignment</i>
                                 <div class="ripple-container"></div>
                             </button>
-                            <button v-if="acciones.equipo" @click="gestionEquipoProyecto()" class="btn btn-info btn-social btn-just-icon btn-round">
+                            <button v-if="acciones.equipo" @click="gestionEquipoProyecto()"
+                                class="btn btn-info btn-social btn-just-icon btn-round">
                                 <i class="material-icons">people</i>
                                 <div class="ripple-container"></div>
                             </button>
@@ -56,116 +61,176 @@
 
             </div>
 
-          </div>
         </div>
+    </div>
 
-        <!-- Gestión de Objetivo -->
-        <div class="modal fade" id="gestion-objetivo-tarea">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Gestión Objetivo de Tarea - [[tareaGestion.tarenombre]] </h3>
-                        <button class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" class="form-horizontal">
-                            <div class="form-group row">
-                                <div class="col-sm-12">
-                                    <label for=""> Cantidad de Encuestas </label>
-                                    <input v-model="tareaGestion.tarerestriccant" type="text" name="" id="" class="form-control">
+    <!-- Gestión de Objetivo -->
+    <div class="modal fade" id="gestion-objetivo-tarea">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div align="center" class="modal-header">
+                    <h3>Tarea: </h3>
+                    <b></b>
+                    <h3>[[tareaGestion.task_name]] </h3>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <h4>Gestión Objetivo</h4>
+                                <label for=""> Cantidad de Encuestas </label>
+                                <input v-model="tareaGestion.task_quantity" type="number" name="" id=""
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+
+                            <div class="col-md-12">
+                                <h4>Ajuste de campaña</h4>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <label for="">Fecha Inicio</label>
+                                        <input v-model="tareaGestion.task_start_date" type="date" name="" id=""
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="">Fecha Fin</label>
+                                        <input v-model="tareaGestion.task_end_date" type="date" name="" id=""
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+
+                                        <label for="">Hora de inicio</label>
+                                        <input v-model="tareaGestion.start_time" class="col-md-11" type="time" id="appt"
+                                            name="appt" min="05:00" max="23:59" required>
+                                    </div>
+                                    <div class="col-sm-6">
+
+                                        <label for="">Hora de cierre</label>
+                                        <input v-model="tareaGestion.end_time" class="col-md-11" type="time" id="appt"
+                                            name="appt" min="05:00" max="23:59" required>
+                                    </div>
                                 </div>
                                 <div align="center" class="col-sm-12">
-                                    <button :disabled="tareaGestion.tarerestriccant && tareaGestion.tarerestriccant.length == 0" @click="edicionObjetivoTarea()" class="btn" type="button">Guardar</button>
+                                    <button
+                                        :disabled="tareaGestion.task_quantity == '' || tareaGestion.task_quantity == 0 || 
+                                        tareaGestion.start_time =='' || tareaGestion.end_time == '' || 
+                                        tareaGestion.task_start_date  == '' || tareaGestion.task_end_date == ''"
+                                        @click="edicionObjetivoTarea()" class="btn" type="button">Guardar</button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Gestión de Tiempo -->
-        <div class="modal fade" id="gestion-proyecto">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Gestión de Tiempo de Proyecto - [[proyectoGestion.proynombre]] </h3>
-                        <button class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" class="form-horizontal">
-                            <div class="form-group row">
-                                <div class="col-sm-6">
-                                    <label for="">Fecha Inicio</label>
-                                    <input v-model="proyectoGestion.proyfechainicio" type="date" name="" id="" class="form-control">
-                                </div>
-                                <div class="col-sm-6">
-                                    <label for="">Fecha Fin</label>
-                                    <input v-model="proyectoGestion.proyfechacierre" type="date" name="" id="" class="form-control">
-                                </div>
-                                <div align="center" class="col-md-12">
-                                    <button :disabled="(proyectoGestion.proyfechainicio && proyectoGestion.proyfechainicio.length == 0) && (proyectoGestion.proyfechacierre && proyectoGestion.proyfechacierre.length > 0)" @click="edicionTiempoProyecto()" class="btn" type="button">Guardar</button>
-                                </div>
+    <!-- Gestión de Tiempo -->
+    <div class="modal fade" id="gestion-proyecto">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div align="center" class="modal-header">
+                    <h3>Gestión de Tiempo de Proyecto - [[proyectoGestion.proj_name]] </h3>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form action="" class="form-horizontal">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="">Fecha Inicio</label>
+                                <input v-model="proyectoGestion.proj_start_date" type="date" name="" id=""
+                                    class="form-control">
                             </div>
-                        </form>
+                            <div class="col-sm-6">
+                                <label for="">Fecha Fin</label>
+                                <input v-model="proyectoGestion.proj_close_date" type="date" name="" id=""
+                                    class="form-control">
+                            </div>
+                            <div align="center" class="col-md-12">
+                                <button
+                                    :disabled="(proyectoGestion.proj_start_date && proyectoGestion.proj_close_date.length == 0) && (proyectoGestion.proyfechacierre && proyectoGestion.proyfechacierre.length > 0)"
+                                    @click="edicionTiempoProyecto()" class="btn" type="button">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gestión de Territorio -->
+    <div class="modal fade" id="gestion-territorio-proyecto">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Cambio de Territorio</h3>
+                    <div @click="closeModalCambioTerritorio()" class="button close" data-dismiss="modal">&times;</div>
+                </div>
+                <div class="modal-body">
+                    <div align="center" v-if="gestionTerritorial.areaDimensionTerritorial">
+                        <p>Por favor selecciona una nueva area en la que se va a ejecutar el proyecto o presiona en
+                            siguiente para usar la misma</p>
+                        <select v-model="barrioSeleccionadoId" @change="cargarDimensionBarrio(barrioSeleccionadoId)"
+                            name="" id="" class="form-control">
+                            <option value="">Seleccione una dimensión</option>
+                            <option v-for="barrio in dimensionesBarrios" :value="barrio.dimension_id"> [[
+                                barrio.dimension_name ]] </option>
+                        </select>
+                        <div id="mapa-dimension-territorial"></div>
+                        <button :disabled="!datosCambioTerritorial.geojson" @click="paso2GestionTerritorial()"
+                            class="btn">Siguiente</button>
+                    </div>
+                    <div align="center" v-if="gestionTerritorial.listadoTareas">
+                        <p>
+                            Por favor especifica para cada una de las tareas una area de trábajo con relación a la
+                            especificada anteriormente.
+                        </p>
+                        <table class="table table-stripped">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Edición</th>
+                                <th>Estado</th>
+                            </tr>
+                            <tr v-for="tarea in datosCambioTerritorial.tareas">
+                                <td> [[ tarea.task_name ]] </td>
+                                <td> <button @click="paso3GestionTerritorial(tarea)" class="btn"> Editar </button> </td>
+                                <td :inner-html.prop="tarea.redimensionado | estadoTareasRedimension"></td>
+                            </tr>
+                        </table>
+                        <button @click="edicionTerritorioProyecto()" class="btn">Guardar</button>
+                    </div>
+                    <div align="center" v-if="gestionTerritorial.areaTarea">
+                        <div id="mapa-tarea"></div>
+                        <button @click="paso2GestionTerritorial()" class="btn">Volver</button>
+                        <button :disabled="!tareaEdicion" @click="paso2GestionTerritorial()"
+                            class="btn">Siguiente</button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Gestión de Territorio -->
-        <div class="modal fade" id="gestion-territorio-proyecto">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Cambio de Territorio</h3>
-                        <div class="button close" data-dismiss="modal">&times;</div>
-                    </div>
-                    <div class="modal-body">
-                        <div align="center" v-if="gestionTerritorial.areaDimensionTerritorial">
-                            <p>Por favor Delimita el area en la que se va a ejecutar el proyecto</p>
-                            <div id="mapa-dimension-territorial"></div>
-                            <button :disabled="!datosCambioTerritorial.geojson" @click="paso2GestionTerritorial()" class="btn">Siguiente</button>
-                        </div>
-                        <div align="center" v-if="gestionTerritorial.listadoTareas">
-                            <p>
-                                Por favor especifica para cada una de las tareas una area de trábajo con relación a la
-                                especificada anteriormente.
-                            </p>
-                            <table class="table table-stripped">
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Edición</th>
-                                    <th>Estado</th>
-                                </tr>
-                                <tr v-for="tarea in datosCambioTerritorial.tareas">
-                                    <td> [[ tarea.tarenombre ]] </td>
-                                    <td> <button @click="paso3GestionTerritorial(tarea)" class="btn"> Editar </button> </td>
-                                    <td :inner-html.prop="tarea.redimensionado | estadoTareasRedimension"></td>
-                                </tr>
-                            </table>
-                            <button @click="edicionTerritorioProyecto()" class="btn">Guardar</button>
-                        </div>
-                        <div align="center" v-if="gestionTerritorial.areaTarea">
-                            <div id="mapa-tarea"></div>
-                            <button :disabled="!tareaEdicion" @click="paso2GestionTerritorial()" class="btn">Volver</button>
-                        </div>
-                    </div>
+    <!-- Gestión de Equipo -->
+    <div class="modal fade" id="gestion-equipo-proyecto">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3> Gestión de Equipo de Proyecto </h3>
+                    <button class="close" data-dismiss="modal">&times;</button>
                 </div>
-            </div>
-        </div>
-
-        <!-- Gestión de Equipo -->
-        <div class="modal fade" id="gestion-equipo-proyecto">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3> Gestión de Equipo de Proyecto </h3>
-                        <button class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <iframe :src="equiposURL" width="860" height="315" frameborder="0"></iframe>
+                            <!--
                                 <div class="col-md-6">
                                     <table class="table table-responsive">
                                         <thead>
@@ -198,13 +263,14 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                                -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
+
+</div>
 
 {% endblock %}

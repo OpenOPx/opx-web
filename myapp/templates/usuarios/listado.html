@@ -2,29 +2,40 @@
 
 {% block content %}
 
-    <div id="gestion-usuarios" class="container-fluid">
+<div id="gestion-usuarios" class="container-fluid">
 
-      <div :class="{loading: loading}"></div>
+  <div :class="{loading: loading}"></div>
 
-      <!-- Usuarios -->
-      <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <button class="btn button-right" data-backdrop="static" data-target="#agregar-usuario" data-toggle="modal">Crear Usuario</button>
-                  <h4 class="card-title ">Usuarios</h4>
-                  <p class="card-category"> Gestión de Usuarios </p>
-                </div>
-                <div class="card-header">
-                  <form action="">
-                    <div class="form-group">
-                      <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filter">
-                    </div>
-                  </form>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <!--<table class="table">
+  <!-- Usuarios -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <button class="btn button-right" data-backdrop="static" data-target="#agregar-usuario"
+            data-toggle="modal">Crear Usuario</button>
+          <h4 class="card-title ">Usuarios</h4>
+          <p class="card-category"> Gestión de Usuarios </p>
+        </div>
+        <div class="card-header">
+          <form action="">
+            <!--<div class="form-group">
+              <label class="bmd-label-floating">
+                Activos
+                <input v-model="activePersons" type="checkbox" >
+              </label>
+              <label class="bmd-label-floating">
+                Inactivos
+                <input v-model="inactivePersons" type="checkbox" >
+              </label>
+            </div> -->
+            <div class="form-group">
+              <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filter">
+            </div>
+          </form>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <!--<table class="table">
                       <thead class=" text-primary">
                         <th>
                           Estado
@@ -69,241 +80,254 @@
                       </tbody>
                     </table>-->
 
-                    <b-table
-                      :fields="userFields"
-                      :items="filteredUsers"
-                      :per-page="pagination.perPage"
-                      :current-page="pagination.currentPage"
-                    >
-                      <template v-slot:cell(userestado)="data">
-                        [[ data.item.userestado | estado-entidad ]]
-                      </template>
-                      <template v-slot:cell(acciones)="data">
-                        <div class="dropdown">
-                          <a class="actions-menu" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <b-table :fields="userFields" :items="filteredUsers" :per-page="pagination.perPage"
+              :current-page="pagination.currentPage">
+              <template v-slot:cell(isactive)="data">
+                [[ data.item.isactive | estado-entidad ]]
+              </template>
+              <template v-slot:cell(acciones)="data">
+                <div class="dropdown">
+                  <a class="actions-menu" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
 
-                          </a>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a @click.prevent="edicionUsuario = data.item" data-backdrop="static"  data-toggle="modal" data-target="#editar-usuario" class="dropdown-item" href="#"> Edición </a>
-                            <a @click="eliminarUsuario(data.item.userid)" class="dropdown-item" href="#"> Eliminación </a>
-                          </div>
-                        </div>
-                      </template>
-                    </b-table>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a @click.prevent="edicionUsuario = data.item" data-backdrop="static" data-toggle="modal"
+                      data-target="#editar-usuario" class="dropdown-item" href="#"> Edición </a>
+                    <a @click="eliminarUsuario(data.item.user_id)" class="dropdown-item" href="#"> Eliminación </a>
+                  </div>
+                </div>
+              </template>
+            </b-table>
 
-                    <b-pagination
-                      v-model="pagination.currentPage"
-                      :per-page="pagination.perPage"
-                      :total-rows="filteredUsers.length"
-                    ></b-pagination>
+            <b-pagination v-model="pagination.currentPage" :per-page="pagination.perPage"
+              :total-rows="filteredUsers.length"></b-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modales -->
+  <div class="row">
+
+    <!-- Creación de Usuario -->
+    <div class="modal fade" id="agregar-usuario">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Crear Usuario</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Nombres</label>
+                    <input v-model="almacenamientoUsuario.pers_name" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Apellidos</label>
+                    <input v-model="almacenamientoUsuario.pers_lastname" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">E-mail</label>
+                    <input v-model="almacenamientoUsuario.useremail" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Rol</label>
+                    <select v-model="almacenamientoUsuario.role_id" class="form-control">
+                      <option value="">Seleccione un rol</option>
+                      <option v-for="rol in roles" :value="rol.role_id"> [[ rol.role_name ]] </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Género</label>
+                    <select v-model="almacenamientoUsuario.gender_id" class="form-control">
+                      <option value="">Seleccione</option>
+                      <option v-for="genero in generos" :value="genero.gender_id"> [[ genero.gender_name ]] </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Barrio</label>
+                    <select v-model="almacenamientoUsuario.neighborhood_id" class="form-control">
+                      <option value="">Seleccione</option>
+                      <option v-for="barrio in barrios" :value="barrio.neighb_id"> [[ barrio.neighb_name ]] </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Nivel Educativo</label>
+                    <select v-model="almacenamientoUsuario.education_level_id" class="form-control">
+                      <option value="">Seleccione</option>
+                      <option v-for="ne in nivelesEducativos" :value="ne.educlevel_id"> [[ ne.educlevel_name ]]
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Teléfono</label>
+                    <input v-model="almacenamientoUsuario.pers_telephone" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Contraseña</label>
+                    <input v-model="almacenamientoUsuario.password" type="password" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Fecha de Nacimiento</label>
+                    <input v-model="almacenamientoUsuario.pers_birthdate" type="date" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">
+                      Empleado?
+                      <input v-model="almacenamientoUsuario.isemployee" type="checkbox">
+                    </label>
+                  </div>
+                </div>
+                <div align="center" class="col-md-12">
+                  <div class="form-group">
+                    <button
+                      :disabled="!almacenamientoUsuario.pers_name || !almacenamientoUsuario.pers_lastname || !almacenamientoUsuario.useremail || !almacenamientoUsuario.password || !almacenamientoUsuario.role_id || !almacenamientoUsuario.pers_birthdate || !almacenamientoUsuario.gender_id || !almacenamientoUsuario.neighborhood_id || !almacenamientoUsuario.education_level_id || !almacenamientoUsuario.pers_telephone"
+                      class="btn" @click="almacenarUsuario()" type="button">Guardar</button>
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
-
-      <!-- Modales -->
-      <div class="row">
-
-          <!-- Creación de Usuario -->
-          <div class="modal fade" id="agregar-usuario">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Crear Usuario</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form action="">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Nombre</label>
-                          <input v-model="almacenamientoUsuario.userfullname" type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">E-mail</label>
-                          <input v-model="almacenamientoUsuario.useremail" type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Rol</label>
-                          <select v-model="almacenamientoUsuario.rolid" class="form-control">
-                              <option value="">Seleccione un rol</option>
-                              <option v-for="rol in roles" :value="rol.rolid"> [[ rol.rolname ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Género</label>
-                          <select v-model="almacenamientoUsuario.generoid" class="form-control">
-                            <option value="">Seleccione</option>
-                            <option v-for="genero in generos" :value="genero.generoid"> [[ genero.nombre ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                       <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Barrio</label>
-                          <select v-model="almacenamientoUsuario.barrioid" class="form-control">
-                            <option value="">Seleccione</option>
-                            <option v-for="barrio in barrios" :value="barrio.barrioid"> [[ barrio.nombre ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                       <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Nivel Educativo</label>
-                          <select v-model="almacenamientoUsuario.nivel_educativo_id" class="form-control">
-                            <option value="">Seleccione</option>
-                            <option v-for="ne in nivelesEducativos" :value="ne.nivelid"> [[ ne.nombre ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Teléfono</label>
-                          <input v-model="almacenamientoUsuario.telefono" type="number" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Contraseña</label>
-                          <input v-model="almacenamientoUsuario.password" type="password" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Fecha de Nacimiento</label>
-                          <input v-model="almacenamientoUsuario.fecha_nacimiento" type="date" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">
-                            Empleado?
-                            <input v-model="almacenamientoUsuario.empleado" type="checkbox">
-                          </label>
-                        </div>
-                      </div>
-                      <div align="center" class="col-md-12">
-                        <div class="form-group">
-                          <button :disabled="!almacenamientoUsuario.userfullname || !almacenamientoUsuario.useremail || !almacenamientoUsuario.password || !almacenamientoUsuario.rolid || !almacenamientoUsuario.fecha_nacimiento || !almacenamientoUsuario.generoid || !almacenamientoUsuario.barrioid || !almacenamientoUsuario.nivel_educativo_id || !almacenamientoUsuario.telefono" class="btn" @click="almacenarUsuario()" type="button">Guardar</button>
-                        </div>
-                      </div>                
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Edición de Usuario -->
-          <div class="modal fade" id="editar-usuario">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Editar Usuario</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form action="">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Nombre</label>
-                          <input v-model="edicionUsuario.userfullname" type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">E-mail</label>
-                          <input v-model="edicionUsuario.useremail" type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Rol</label>
-                          <select v-model="edicionUsuario.rolid" class="form-control">
-                              <option value="">Seleccione un rol</option>
-                              <option v-for="rol in roles" :value="rol.rolid"> [[ rol.rolname ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Género</label>
-                          <select v-model="edicionUsuario.generoid" class="form-control">
-                            <option value="">Seleccione</option>
-                            <option v-for="genero in generos" :value="genero.generoid"> [[ genero.nombre ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                       <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Barrio</label>
-                          <select v-model="edicionUsuario.barrioid" class="form-control">
-                            <option value="">Seleccione</option>
-                            <option v-for="barrio in barrios" :value="barrio.barrioid"> [[ barrio.nombre ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                       <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Nivel Educativo</label>
-                          <select v-model="edicionUsuario.nivel_educativo_id" class="form-control">
-                            <option value="">Seleccione</option>
-                            <option v-for="ne in nivelesEducativos" :value="ne.nivelid"> [[ ne.nombre ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Teléfono</label>
-                          <input v-model="edicionUsuario.telefono" type="number" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Contraseña</label>
-                          <input v-model="edicionUsuario.password" type="password" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Fecha de Nacimiento</label>
-                          <input v-model="edicionUsuario.fecha_nacimiento" type="date" class="form-control">
-                        </div>
-                      </div>
-                       <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">
-                            Empleado?
-                            <input v-model="edicionUsuario.empleado" type="checkbox">
-                          </label>
-                        </div>
-                      </div>
-                      <div align="center" class="col-md-12">
-                        <div class="form-group">
-                          <button :disabled="!edicionUsuario.userfullname || !edicionUsuario.useremail || !edicionUsuario.rolid || !edicionUsuario.fecha_nacimiento || !edicionUsuario.generoid || !edicionUsuario.barrioid || !edicionUsuario.nivel_educativo_id || !edicionUsuario.telefono" class="btn" @click="editarUsuario()" type="button">Editar</button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
+      </div>
     </div>
+
+    <!-- Edición de Usuario -->
+    <div class="modal fade" id="editar-usuario">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Usuario</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Nombres</label>
+                    <input v-model="edicionUsuario.pers_name" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Apellidos</label>
+                    <input v-model="edicionUsuario.pers_lastname" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">E-mail</label>
+                    <input v-model="edicionUsuario.useremail" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Rol</label>
+                    <select v-model="edicionUsuario.role_id" class="form-control">
+                      <option value="">Seleccione un rol</option>
+                      <option v-for="rol in roles" :value="rol.role_id"> [[ rol.role_name ]] </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Género</label>
+                    <select v-model="edicionUsuario.gender_id" class="form-control">
+                      <option value="">Seleccione</option>
+                      <option v-for="genero in generos" :value="genero.gender_id"> [[ genero.gender_name ]] </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Barrio</label>
+                    <select v-model="edicionUsuario.neighborhood_id" class="form-control">
+                      <option value="">Seleccione</option>
+                      <option v-for="barrio in barrios" :value="barrio.neighb_id"> [[ barrio.neighb_name ]] </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Nivel Educativo</label>
+                    <select v-model="edicionUsuario.education_level_id" class="form-control">
+                      <option value="">Seleccione</option>
+                      <option v-for="ne in nivelesEducativos" :value="ne.educlevel_id"> [[ ne.educlevel_name ]]
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Teléfono</label>
+                    <input v-model="edicionUsuario.pers_telephone" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Contraseña</label>
+                    <input v-model="edicionUsuario.password" type="password" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Fecha de Nacimiento</label>
+                    <input v-model="edicionUsuario.pers_birthdate" type="date" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">
+                      Empleado?
+                      <input v-model="edicionUsuario.isemployee" type="checkbox">
+                    </label>
+                  </div>
+                </div>
+                <div align="center" class="col-md-12">
+                  <div class="form-group">
+                    <button
+                      :disabled="!edicionUsuario.pers_name || !edicionUsuario.pers_lastname || !edicionUsuario.useremail || !edicionUsuario.role_id || !edicionUsuario.pers_birthdate || !edicionUsuario.gender_id || !edicionUsuario.neighborhood_id || !edicionUsuario.education_level_id || !edicionUsuario.pers_telephone"
+                      class="btn" @click="editarUsuario()" type="button">Editar</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 {% endblock %}

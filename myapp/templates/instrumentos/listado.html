@@ -13,7 +13,7 @@
             <div class="card-header card-header-primary">
               <button class="btn button-right" data-target="#agregar-instrumento" data-toggle="modal">Crear Instrumento</button>
               <h4 class="card-title ">Instrumentos</h4>
-              <p class="card-category"> Gestión de Instrumentos </p>
+              <p class="card-category"> Formularios para la obtención de información mediante preguntas específicas</p>
             </div>
             <div class="card-header">
               <form action="">
@@ -72,8 +72,8 @@
                   :per-page="pagination.perPage"
                   :current-page="pagination.currentPage"
                 >
-                  <template v-slot:cell(instrtipo)="data">
-                    [[ data.item.instrtipo | tipoInstrumento ]]
+                  <template v-slot:cell(instrument_type)="data">
+                    [[ data.item.instrument_type | tipoInstrumento ]]
                   </template>
 
                   <template v-slot:cell(acciones)="data">
@@ -84,7 +84,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       <a @click.prevent="edicionInstrumento = data.item" data-toggle="modal" data-target="#editar-instrumento" class="dropdown-item" href="#"> Edición </a>
                       <!--<a @click.prevent="eliminarInstrumento(instrumento.instrid)" class="dropdown-item" href="#"> Eliminación </a>-->
-                      <a v-if="data.item.instrtipo == 1" @click.prevent="implementarEncuesta(data.item.instrid)" class="dropdown-item" href="#"> Implementar </a>
+                      <a v-if="data.item.instrument_type == 1" @click.prevent="implementarEncuesta(data.item.instrument_id)" class="dropdown-item" href="#"> Implementar </a>
                       <!-- <a v-if="instrumento.instrtipo == 1" @click.prevent="informacionEncuesta(instrumento.instrid)" class="dropdown-item" href="#"> Información </a>
                       <a v-if="instrumento.instrtipo == 2" class="dropdown-item" :href="'/instrumentos/informacion/' + instrumento.instrid"> Información </a> -->
                     </div>
@@ -125,9 +125,8 @@
                       <div class="form-group">
                         <label class="bmd-label-floating">Tipo</label>
                           <select v-model="almacenamientoInstrumento.instrtipo" @change="cantidadFormulariosKobotoolboxPreregistro()" class="form-control">
-                              <option value="">Seleccione un tipo</option>
-                              <option value="1">Encuesta</option>
-                              <option value="2">Cartografia</option>
+                            <option value="">Seleccione</option>
+                            <option v-for="task_type in tiposTareas" :value="task_type.task_type_id"> [[ task_type.task_type_name ]]</option>
                           </select>
                       </div>
                     </div>
@@ -193,18 +192,18 @@
                     <div class="col-md-12">
                       <div class="form-group">
                         <label class="bmd-label-floating">Nombre</label>
-                        <input class="form-control" type="text" v-model="edicionInstrumento.instrnombre">
+                        <input class="form-control" type="text" v-model="edicionInstrumento.instrument_name">
                       </div>
                     </div>
                     <div class="col-md-12">
                       <div class="form-group">
                         <label class="bmd-label-floating">Descripción</label>
-                        <textarea class="form-control" v-model="edicionInstrumento.instrdescripcion"></textarea>
+                        <textarea class="form-control" v-model="edicionInstrumento.instrument_description"></textarea>
                       </div>
                     </div>
                     <div align="center" class="col-md-12">
                       <div class="form-group">
-                        <button :disabled="!edicionInstrumento.instrtipo || !edicionInstrumento.instrnombre" class="btn" @click="editarInstrumento()" type="button">Editar</button>
+                        <button :disabled="!edicionInstrumento.instrument_type || !edicionInstrumento.instrument_name" class="btn" @click="editarInstrumento()" type="button">Editar</button>
                       </div>
                     </div>
                   </div>

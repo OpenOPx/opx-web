@@ -31,7 +31,6 @@ let rol = new Vue({
                 }
             })
             .then(response => {
-
                 this.permisos = response.data;
                 this.loader(false);
             });
@@ -41,7 +40,6 @@ let rol = new Vue({
             this.loader(true);
 
             this.almacenamientoPermiso.rolid = this.rolID;
-
             var queryString = Object.keys(this.almacenamientoPermiso).map(key => {
                 return key + '=' + this.almacenamientoPermiso[key]
             }).join('&');
@@ -85,8 +83,15 @@ let rol = new Vue({
                 });
             });
         },
-        eliminarPermiso(id){
+        datas (ids) {
+            return {
+            id: ids
+            }
+        },
+        eliminarPermiso(id, rol){
 
+            this.rolID = rol
+            
             Swal.fire({
               title: 'Estas seguro?',
               text: "No lo puedes revertir",
@@ -101,10 +106,10 @@ let rol = new Vue({
               if (result.value) {
 
                 this.loader(true);
-
                 axios({
                     method: 'DELETE',
-                    url: '/funciones-rol/delete/' + id,
+                    url: '/funciones-rol/delete/' + id ,
+                    data: this.datas(rol),
                     headers: {
                         Authorization: getToken()
                     }

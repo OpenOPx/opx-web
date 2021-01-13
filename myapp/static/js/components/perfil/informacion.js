@@ -22,7 +22,6 @@ let informacionPerfil = new Vue({
             if(userInfo != null && typeof userInfo == 'object' && userInfo.hasOwnProperty('user')){
 
                 this.infoUsuario = userInfo.user;
-
                 if(this.infoUsuario.hasOwnProperty('userfullname') && this.infoUsuario.userfullname != null){
 
                     this.getIniciales(this.infoUsuario.userfullname);

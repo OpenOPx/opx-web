@@ -58,10 +58,11 @@ def passwordResetVerification(request):
         else:
 
             # Consulta de Usuario
-            usuario = models.Usuario.objects.get(useremail__exact = email)
+            usuario = models.User.objects.get(useremail__exact = email)
+            person = models.Person.objects.get(user__userid__exact = usuario.userid)
 
             # Asunto
-            subject = "Recuperación de contraseña"
+            subject = "Recuperación de contraseña OPX"
 
             # Generación de Token
             token = ''.join(random.choices(string.ascii_uppercase + string.digits, k=30))
@@ -71,8 +72,16 @@ def passwordResetVerification(request):
             usuario.save()
 
             # Mensaje del correo
-            message = "<p> Cambia tu clave <a href='" + settings.URL_APP + "auth/password-reset/" + token + "'> Aquí </a> </p>"
-
+            message = '<h1><span style="color: #3366ff;"><span style="color: #000000;">Solicitud de cambio de </span> \
+                        <span style="color: #2b2301;"><span style="color: #ff0000;"><span style="color: #000000;">contrase&ntilde;a!</span></span></span></span></h1> \
+                        <h2 style="color: #2e6c80;">'+person.pers_name +',</h2> \
+                        <p>Se ha solicitado el restablecmiento de tu contrase&ntilde;a. Para continuar con el proceso, por favor de click en el siguiente enlace \
+                        <span style="background-color: #3366ff; color: #ffffff; display: inline-block; padding: 3px 10px; font-weight: bold; border-radius: 5px;"> \
+                        <a style="background-color: #3366ff; color: #ffffff;" href="'+settings.URL_APP+'auth/password-reset/'+token+'">Solicitar contrase&ntilde;a</a></span>&nbsp;</p>\
+                        <p>Si tu no has hecho esta solicitud, por favor has caso omiso de este mensaje.</p> \
+                        <p>&nbsp;</p> \
+                        <h1><span style="color: #3366ff;"><strong>Open OPX</strong></span></h1> \
+                        <p>&nbsp;</p>'
             # Envío de correo electrónico
             send_mail(
                 subject,
@@ -107,7 +116,7 @@ def passwordResetVerification(request):
 def passwordResetConfirmation(request, token):
 
     try:
-        usuario = models.Usuario.objects.get(usertoken__exact = token)
+        usuario = models.User.objects.get(usertoken__exact = token)
 
         status = True
 
@@ -147,7 +156,7 @@ def passwordResetDone(request):
         else:
 
             # Eliminación de token y modificación de contraseña
-            usuario = models.Usuario.objects.get(usertoken__exact=token)
+            usuario = models.User.objects.get(usertoken__exact=token)
 
             # Contexto Passlib
             pwd_context = CryptContext(

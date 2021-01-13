@@ -29,6 +29,7 @@ let tarea = new Vue({
         proyectos: [],
         instrumentos: [],
         loading: false,
+        campana: false,
         dimensionesTerritoriales: [],
         taskMap: {},
         dimensionTerritorialReferencia: {},
@@ -46,34 +47,34 @@ let tarea = new Vue({
         tareasFields: [
             {
                 label: 'Nombre',
-                key: 'tarenombre',
+                key: 'task_name',
                 sortable: true
             },
             {
                 label: 'Tipo',
-                key: 'taretipo',
+                key: 'task_type_name',
                 sortable: true
             },
             {
                 label: 'Cantidad',
-                key: 'tarerestriccant',
+                key: 'task_quantity',
                 sortable: true
             },
             {
-                label: 'Instrumento',
-                key: 'instrnombre'
+                label: 'Completitud (%)',
+                key: 'task_completness'
             },
             {
                 label: 'Proyecto',
-                key: 'proynombre'
+                key: 'proj_name'
             },
             {
                 label: 'Prioridad',
-                key: 'tareprioridad'
+                key: 'priority_name'
             },
             {
                 label: 'Fecha de Creación',
-                key: 'tarefechacreacion'
+                key: 'task_creation_date'
             },
             {
                 label: '',
@@ -82,6 +83,9 @@ let tarea = new Vue({
         ]
     },
     methods: {
+        cambiarCampana(campana){
+            this.campana = campana
+        },
         listadoTareas(){
 
             this.loader(true);
@@ -101,7 +105,6 @@ let tarea = new Vue({
                 this.loader(false);
 
                 if(response.data.code == 200 && response.data.status == 'success'){
-
                     this.tareas = response.data.tareas;
                 }
             });
@@ -112,7 +115,7 @@ let tarea = new Vue({
 
             axios({
                 method: 'GET',
-                url: '/proyectos/detail/' + proyectoid,
+                url: '/proyectos/details/' + proyectoid,
                 headers: {
                     Authorization: getToken()
                 }
@@ -122,7 +125,6 @@ let tarea = new Vue({
                 this.loader(false);
 
                 if(response.data.code == 200 && response.data.status == 'success'){
-
                     this.tareas = response.data.detail.tareas;
                 }
             });
@@ -135,11 +137,11 @@ let tarea = new Vue({
 
                 if(key == 'dimensionid' && this.almacenamientoTarea.taretipo == "1"){
 
-                    valor = this.almacenamientoTarea['dimensionid'].dimensionid;
+                    valor = (this.almacenamientoTarea.dimensionid).dimension_id;
 
                 } else if(key == 'instrid'){
 
-                    valor = this.almacenamientoTarea['instrid'] = this.almacenamientoTarea['instrid'].instrid;
+                    valor = this.almacenamientoTarea.instrid
 
                 } else{
 
@@ -192,9 +194,83 @@ let tarea = new Vue({
                     geojsonsubconjunto: null
                 };
                 this.restablecerMapa();
+                this.almacenamientoProyecto.tarfechainicio = null;
+                this.almacenamientoProyecto.tarfechacierre= null;
+                this.loader(false);
+                Swal.fire({
+                  title: 'Error!',
+                  text: 'Ocurrio un error. Por favor intenta de nuevo',
+                  type: 'error',
+                  confirmButtonText: 'Acepto'
+                });
+            });
+        },
+        almacenarCampana(){
+            this.loader(true);
+
+            var queryString = Object.keys(this.almacenamientoTarea).map(key => {
+
+                if(key == 'dimensionid' && this.almacenamientoTarea.task_type_id == "1"){
+
+                    valor = (this.almacenamientoTarea.dimensionid).dimension_id;
+
+                } else if(key == 'instrument_id'){
+
+                    valor = this.almacenamientoTarea.instrument_id
+
+                } else{
+
+                    valor = this.almacenamientoTarea[key];
+                }
+
+                return key + '=' + valor;
+            }).join('&');
+
+            axios({
+                method: 'post',
+                url: '/tareas/campana/',
+                data: queryString,
+                headers: {
+                    'Content-type': 'application/x-www-form-urlencoded',
+                    Authorization: getToken()
+                }
+            })
+            .then(response => {
+
+                $("#agregar-tarea").modal('hide')
+                this.almacenamientoTarea = {
+                    geojsonsubconjunto: null
+                };
+                this.restablecerMapa();
+
+                if(this.general){
+
+                    this.listadoTareas();
+
+                } else{
+
+                    this.listadoTareasProyecto(this.proyectoID);
+                }
+
 
                 this.loader(false);
 
+                Swal.fire({
+                  title: 'Exito!',
+                  text: 'Tarea creada satisfactoriamente',
+                  type: 'success',
+                  confirmButtonText: 'Acepto'
+                });
+            })
+            .catch(response => {
+
+                $("#agregar-tarea").modal('hide')
+                this.almacenamientoTarea = {
+                    geojsonsubconjunto: null
+                };
+                this.restablecerMapa();
+
+                this.loader(false);
                 Swal.fire({
                   title: 'Error!',
                   text: 'Ocurrio un error. Por favor intenta de nuevo',
@@ -237,7 +313,7 @@ let tarea = new Vue({
 
                     } else{
 
-                        this.listadoTareasProyecto();
+                        this.listadoTareasProyecto(this.proyectoID)
                     }
 
 
@@ -255,8 +331,8 @@ let tarea = new Vue({
 
                      } else{
 
-                        this.listadoTareasProyecto();
-                     }
+                        this.listadoTareasProyecto(this.proyectoID)
+                    }
 
                      this.loader(false);
 
@@ -293,10 +369,9 @@ let tarea = new Vue({
                 return key + '=' + valor;
 
             }).join('&');
-
             axios({
                 method: 'post',
-                url: '/tareas/' + this.edicionTarea.tareid,
+                url: '/tareas/' + this.edicionTarea.task_id,
                 data: queryString,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -313,7 +388,7 @@ let tarea = new Vue({
 
                 } else{
 
-                    this.listadoTareasProyecto();
+                    this.listadoTareasProyecto(this.proyectoID)
                 }
                 this.loader(false);
 
@@ -377,7 +452,7 @@ let tarea = new Vue({
             this.loading = status;
         },
         obtenerDimensionesTerritoriales(proyid){
-
+            
             axios({
                 url: '/proyectos/dimensiones-territoriales/' + proyid,
                 method: 'GET',
@@ -399,15 +474,15 @@ let tarea = new Vue({
             })
         },
         generarMapa(timeout, dimension){
-
+            
             window.setTimeout(() => {
-
+                
                 var taskMap = L.map('taskmap',  {
                     center: [3.450572, -76.538705],
                     drawControl: false,
                     zoom: 13
                 });
-
+                
                 L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
                   attribution: 'idesccali.gov.co © IDESC',
                 }).addTo(taskMap);
@@ -418,10 +493,8 @@ let tarea = new Vue({
                   transparent: !0,
                   version: '1.1.0'
                 }).addTo(taskMap);
-
                 if(dimension){
-
-                    this.dimensionTerritorialReferencia = L.polygon(this.obtenerCoordenadas(dimension.geojson)).addTo(taskMap);
+                    this.dimensionTerritorialReferencia = L.polygon(this.obtenerCoordenadas(dimension.dimension_geojson)).addTo(taskMap);
 
                     //L.marker([3.45000, -76.535000]).addTo(taskMap);
 
@@ -479,7 +552,6 @@ let tarea = new Vue({
             }, timeout);
         },
         restablecerMapa(){
-
             this.taskMap.remove();
             this.generarMapa(0);
             this.almacenamientoTarea.geojsonsubconjunto = null;
@@ -502,9 +574,18 @@ let tarea = new Vue({
             return coordenadas;
         },
         generarDimensionTerritorial(dimension){
-
             if(this.almacenamientoTarea.taretipo == "1"){
 
+                this.almacenamientoTarea.dimensionIDparaTerritorialD = dimension.dimension_id
+                this.taskMap.remove();
+                this.almacenamientoTarea.geojsonsubconjunto = null;
+                this.generarMapa(0, dimension);
+            }
+        },
+        generarDimensionTerritorialCampana(dimension){
+            if(this.almacenamientoTarea.task_type_id == "1"){
+
+                this.almacenamientoTarea.dimensionIDparaTerritorialD = dimension.dimension_id
                 this.taskMap.remove();
                 this.almacenamientoTarea.geojsonsubconjunto = null;
                 this.generarMapa(0, dimension);
@@ -553,6 +634,18 @@ let tarea = new Vue({
                 this.almacenamientoTarea.geojsonsubconjunto = null;
                 this.generarMapa(0, instrumento);
             }
+        },
+        formateoFechaInicio(date){
+            this.almacenamientoTarea.tarfechainicio = moment(date).format('YYYY-MM-DD');
+        },
+        formateoFechaFin(date){
+            this.almacenamientoTarea.tarfechacierre = moment(date).format('YYYY-MM-DD');
+        },
+        edicionformateoFechaInicio(date){
+            this.edicionTarea.tarfechainicio = moment(date).format('YYYY-MM-DD');
+        },
+        edicionformateoFechaFin(date){
+            this.edicionTarea.tarfechacierre = moment(date).format('YYYY-MM-DD');
         }
     },
     filters: {

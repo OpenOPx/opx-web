@@ -1,9 +1,10 @@
-window.kpiUrl = "http://kf.variamos.com/#/forms";
+//window.kpiUrl = "http://kf.kobo.local/#/forms";
+//window.kpiUrl = "https://beycker111.github.io/crud-autenticacion-usuarios-dependencias/#/login";
 // window.kpiUrl = "https://kobo.humanitarianresponse.info/#/forms/";
 
 window.getToken = function(){
 
-    let userInfo = JSON.parse(sessionStorage.getItem('userinfo'));
+    let userInfo = JSON.parse(localStorage.getItem('userinfo'));
 
     if(userInfo != null && typeof userInfo == 'object' && userInfo.hasOwnProperty('token')){
 
@@ -203,6 +204,15 @@ require('./components/reportes/antes').estadisticas;
 require('./components/reportes/durante').estadisticas;
 require('./components/reportes/despues').estadisticas;
 require('./components/reportes/detalle').estadisticas;
+require('./components/reportes/reportesproyectos').proyecto;
+require('./components/reportes/reporteindividualproyecto').proyectoReporte;
+
+
+require('./components/reportes/reportePlantilla').reportePlantilla;
+require('./components/reportes/reporteEquipo').reporteEquipo;
+require('./components/reportes/reporteMiembro').reporteMiembro;
+require('./components/reportes/reporteRank').reporteClasificacion;
+
 
 // Gestión de Plantillas de Equipo
 require('./components/plantillas/plantillasEquipo').gestionPlantilla;

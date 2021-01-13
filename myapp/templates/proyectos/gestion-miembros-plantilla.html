@@ -4,15 +4,15 @@
 
     <div class="container-fluid" id="gestion-miembros-plantilla" :load="plantillaID = '{{ plantilla.planid }}'">
 
-      <!--<div :class="{loading:loading}"></div>-->
+      <div :class="{loading:loading}"></div>
 
       <div class="row">
 
         <!-- Miembros de la plantilla -->
-        <div class="col-md-8">
+        <div class="col-md-7">
           <div class="card">
             <div class="card-header card-header-primary">
-              <h4 class="card-title ">Equipo {{ plantilla.descripcion }}</h4>
+              <h4 class="card-title ">Equipo {{ plantilla.team_name }}</h4>
               <p class="card-category"> Gestión de Equipo </p>
             </div>
             <div class="card-header">
@@ -62,7 +62,7 @@
 
                       </a>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a @click.prevent="eliminarIntegrante(data.item.miplid)" class="dropdown-item" href="#"> Eliminación </a>
+                        <a @click.prevent="eliminarIntegrante(data.item.teampers_id)" class="dropdown-item" href="#"> Eliminación</a>
                       </div>
                     </div>
                   </template>
@@ -78,7 +78,7 @@
           </div>
         </div>
         <!-- Usuarios Disponibles -->
-        <div class="col-md-4">
+        <div class="col-md-5">
           <div class="card">
             <div class="card-header card-header-primary">
               <h4 class="card-title "> Usuarios Disponibles </h4>
@@ -131,7 +131,7 @@
 
                       </a>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a @click.prevent="agregarIntegrante(data.item.userid)" class="dropdown-item" href="#"> Agregar </a>
+                        <a @click.prevent="agregarIntegrante(data.item.user_id)" class="dropdown-item" href="#"> Agregar</a>
                       </div>
                     </div>
                   </template>

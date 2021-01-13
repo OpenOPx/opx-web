@@ -17,20 +17,20 @@ let decision = new Vue({
         // Paginación
         pagination: {
             currentPage: 1,
-            perPage: 5
+            perPage: 10
         },
         // Busqueda
         filter: '',
         // Campos Decision
         decisionesFields: [
             {
-                label: 'Descripción',
-                key: 'desidescripcion',
+                label: 'Nombre',
+                key: 'decs_name',
                 sortable: true
             },
             {
-                label: 'Usuario',
-                key: 'userfullname',
+                label: 'Descripcion',
+                key: 'decs_description',
                 sortable: true
             },
             {
@@ -61,12 +61,11 @@ let decision = new Vue({
 
             this.loader(true);
 
-            this.almacenamientoDecision.userid = getUser().userid;
+            //this.almacenamientoDecision.userid = getUser().userid;
 
             var queryString = Object.keys(this.almacenamientoDecision).map(key => {
                 return key + '=' + this.almacenamientoDecision[key]
             }).join('&');
-
             axios({
                 method: 'post',
                 url: '/decisiones/store/',
@@ -100,7 +99,7 @@ let decision = new Vue({
 
                 Swal.fire({
                   title: 'Error!',
-                  text: 'Ocurrio un error. Por favor intenta de nuevo',
+                  text: 'Ya existe una decisión con el nombre digitado, verifica la información',
                   type: 'error',
                   confirmButtonText: 'Acepto'
                 });
@@ -148,7 +147,7 @@ let decision = new Vue({
 
                      Swal.fire(
                       'Error!',
-                      'Ocurrio un error por favor intenta de nuevo',
+                      'No es posible eliminar la decisión debido a que está vinculada a un proyecto',
                       'error'
                     );
                 });
@@ -162,10 +161,9 @@ let decision = new Vue({
             var queryString = Object.keys(this.edicionDecision).map(key => {
                 return key + '=' + this.edicionDecision[key];
             }).join('&');
-
             axios({
                 method: 'post',
-                url: '/decisiones/' + this.edicionDecision.desiid,
+                url: '/decisiones/' + this.edicionDecision.decs_id,
                 data: queryString,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -191,7 +189,7 @@ let decision = new Vue({
 
                 Swal.fire(
                     'Error!',
-                    'Ocurrio un error. Por favor intenta de nuevo',
+                    'Ya existe una decisión con el nombre digitado, verifica la información',
                     'error'
                 );
             });

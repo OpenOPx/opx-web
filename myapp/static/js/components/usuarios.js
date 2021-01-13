@@ -26,17 +26,24 @@ let usuario = new Vue({
             currentPage: 1,
             perPage: 10
         },
+        // Filtro por estado
+        activePersons: true,
+        inactivePersons: false,
         // Búsqueda
         filter: '',
         // Campos Usuario
         userFields: [
             {
                 label: 'Estado',
-                key: 'userestado'
+                key: 'isactive'
             },
             {
-                label: 'Nombre',
-                key: 'userfullname'
+                label: 'Nombres',
+                key: 'pers_name'
+            },
+            {
+                label: 'Apellidos',
+                key: 'pers_lastname'
             },
             {
                 label: 'E-mail',
@@ -44,11 +51,11 @@ let usuario = new Vue({
             },
             {
                 label: 'Rol',
-                key: 'rolname'
+                key: 'role_name'
             },
             {
                 label: 'Fecha de Creación',
-                key: 'fecha_creacion'
+                key: 'pers_creation_date'
             },
             {
                 label: '',
@@ -60,18 +67,38 @@ let usuario = new Vue({
         listadoUsuarios(){
 
             this.loader(true);
-
+            url_req = '/usuarios/list/';
+            if(this.activePersons && this.inactivePersons){
+                url_req = '/usuarios/list/?isactive=all';
+            }
+            else if(this.inactivePersons){
+                url_req = '/usuarios/list/?isactive=inactive';
+            }
+            else if(!this.activePersons&&!this.inactivePersons){
+                url_req = '/usuarios/list/?isactive=none';
+            }
+            //let users = []
             axios({
                 method: 'GET',
-                url: '/usuarios/list/',
+                url: url_req,
                 headers: {
                     Authorization: getToken()
                 }
             })
             .then(response => {
-
                 this.usuarios = response.data;
                 this.loader(false);
+            })
+            .catch(err => {
+
+                this.loader(false);
+
+                Swal.fire({
+                  title: 'Error!',
+                  text: 'Ocurrio un error. Por favor intenta de nuevo ',
+                  type: 'error',
+                  confirmButtonText: 'Acepto'
+                });
             });
         },
         almacenarUsuario(){
@@ -106,7 +133,7 @@ let usuario = new Vue({
                   confirmButtonText: 'Acepto'
                 });
             })
-            .catch(response => {
+            .catch(err => {
 
                 $("#agregar-usuario").modal('hide')
                 this.almacenamientoUsuario = {};
@@ -182,7 +209,7 @@ let usuario = new Vue({
 
             axios({
                 method: 'post',
-                url: '/usuarios/' + this.edicionUsuario.userid,
+                url: '/usuarios/' + this.edicionUsuario.user_id,
                 data: queryString,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -284,6 +311,11 @@ let usuario = new Vue({
         }
     },
     computed: {
+        usuariosActives(){
+            //let foo = this.activePersons
+            this.listadoUsuarios()
+            return 1;
+        },
         filteredUsers(){
 
             var filter = this.filter && this.filter.toLowerCase();

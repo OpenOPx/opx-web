@@ -2,29 +2,30 @@
 
 {% block content %}
 
-    <div id="gestion-proyectos" class="container-fluid">
+<div id="gestion-proyectos" class="container-fluid">
 
-      <div :class="{loading:loading}"></div>
+  <div :class="{loading:loading}"></div>
 
-      <!-- Proyectos -->
-      <div class="row">
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-header card-header-primary">
-              <button class="btn button-right" data-backdrop="static" data-target="#agregar-proyecto" data-toggle="modal" @click.prevent="generarMapa(2000)">Crear Proyecto</button>
-              <h4 class="card-title ">Proyectos</h4>
-              <p class="card-category"> Gestión de Proyectos </p>
+  <!-- Proyectos -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <button class="btn button-right" data-backdrop="static" data-target="#agregar-proyecto" data-toggle="modal"
+            @click.prevent="generarMapa(2000)">Crear Proyecto</button>
+          <h4 class="card-title ">Proyectos</h4>
+          <p class="card-category"> Gestión de Proyectos </p>
+        </div>
+        <div class="card-header">
+          <form action="">
+            <div class="form-group">
+              <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filterKey">
             </div>
-            <div class="card-header">
-              <form action="">
-                <div class="form-group">
-                  <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filterKey">
-                </div>
-              </form>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <!--<table class="table">
+          </form>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <!--<table class="table">
                   <thead class=" text-primary">
                     <th>
                       Estado
@@ -70,299 +71,296 @@
                     </tr>
                   </tbody>
                 </table>-->
-                <b-table
-                        :fields="proyectosFields"
-                        :items="filteredProjects"
-                        :current-page="pagination.currentPage"
-                        :per-page="pagination.perPage"
-                >
-                  <template v-slot:cell(proydescripcion)="data">
-                    <span v-html="data.item.proydescripcion"></span>
-                  </template>
-                  <template v-slot:cell(estado)="data">
-                    [[ data.item.proyestado | estado-entidad ]]
-                  </template>
-                  <template v-slot:cell(proyfechacreacion)="data">
-                    [[ data.item.proyfechacreacion | fechas ]]
-                  </template>
-                  <template v-slot:cell(acciones)="data">
-                    <div class="dropdown">
-                          <a class="actions-menu" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <b-table :fields="proyectosFields" :items="filteredProjects" :current-page="pagination.currentPage"
+              :per-page="pagination.perPage">
+              <template v-slot:cell(proydescripcion)="data">
+                <span v-html="data.item.proydescripcion"></span>
+              </template>
+              <template v-slot:cell(estado)="data">
+                [[ data.item.proyestado | estado-entidad ]]
+              </template>
+              <template v-slot:cell(proyfechacreacion)="data">
+                [[ data.item.proyfechacreacion | fechas ]]
+              </template>
+              <template v-slot:cell(acciones)="data">
+                <div class="dropdown">
+                  <a class="actions-menu" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
 
-                          </a>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a @click.prevent="edicionProyecto = data.item" data-toggle="modal" data-target="#editar-proyecto" class="dropdown-item" href="#"> Edición </a>
-                        <a @click="eliminarProyecto(data.item.proyid)" class="dropdown-item" href="#"> Eliminación </a>
-                        <a class="dropdown-item" :href="'/equipos/proyecto/' + data.item.proyid"> Equipo </a>
-                        <a class="dropdown-item" :href="'/proyectos/' + data.item.proyid + '/tareas/'"> Tareas </a>
-                      </div>
-                    </div>
-                  </template>
-                </b-table>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a @click.prevent="edicionProyecto = data.item" data-toggle="modal" data-target="#editar-proyecto"
+                      class="dropdown-item" href="#"> Edición </a>
+                    <a @click="eliminarProyecto(data.item.proj_id)" class="dropdown-item" href="#"> Eliminación</a>
+                    <a class="dropdown-item" :href="'/equipos/proyecto/' + data.item.proj_id"> Equipo </a>
+                    <a class="dropdown-item" :href="'/proyectos/' + data.item.proj_id + '/tareas/'"> Tareas </a>
+                  </div>
+                </div>
+              </template>
+            </b-table>
 
-                <b-pagination
-                  v-model="pagination.currentPage"
-                  :total-rows="filteredProjects.length"
-                  :per-page="pagination.perPage"
-                ></b-pagination>
+            <b-pagination v-model="pagination.currentPage" :total-rows="filteredProjects.length"
+              :per-page="pagination.perPage"></b-pagination>
 
-              </div>
-            </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Modales -->
-      <div class="row">
+  <!-- Modales -->
+  <div class="row">
 
-          <!-- Creación de Proyecto -->
-          <div class="modal fade" id="agregar-proyecto">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Crear Proyecto</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
+    <!-- Creación de Proyecto -->
+    <div class="modal fade" id="agregar-proyecto">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" align="center">Crear Proyecto</h3>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
 
-                  <!--  Datos Generales  -->
+            <!--  Datos Generales  -->
+            <div class="row">
+              <div class="container">
+                <form action="">
                   <div class="row">
-                    <div class="container">
-                       <form action="">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <div class="form-group">
-                              <label class="bmd-label-floating">Nombre</label>
-                              <input v-model="almacenamientoProyecto.proynombre" type="text" class="form-control">
-                            </div>
-                          </div>
-                          <div class="col-md-12">
-                            <div class="form-group">
-                              <label class="bmd-label-floating">Descripción</label>
-                              <!--<textarea v-model="almacenamientoProyecto.proydescripcion" class="form-control"></textarea>-->
-                              <editor
-                                 api-key="yppjpwidnfhsiwqjvltoxykexydqk3m1xk218rj4r1lvk85v"
-                                 :init="{
-                                   height: 300,
-                                   menubar: false,
-                                   plugins: 'link',
-                                   toolbar:
-                                     'undo redo | formatselect | bold italic backcolor | \
-                                     alignleft aligncenter alignright alignjustify | \
-                                     bullist numlist outdent indent | removeformat | link'
-                                 }"
-                                 v-model="almacenamientoProyecto.proydescripcion"
-                               />
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="" class="bmd-label-floating">Decisiones</label>
-                              <!--<select v-model="almacenamientoProyecto.decisiones" class="form-control" multiple name="" id="">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Nombre</label>
+                        <input v-model="almacenamientoProyecto.proynombre" type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="bmd-label-floating">Descripción</label>
+                        <textarea v-model="almacenamientoProyecto.proydescripcion" class="form-control"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="" class="bmd-label-floating">Decisiones</label>
+                        <!--<select v-model="almacenamientoProyecto.decisiones" class="form-control" multiple name="" id="">
                                 <option value="">Seleccione</option>
                                 <option v-for="decision in decisiones" :value="decision.desiid"> [[ decision.desidescripcion ]] </option>
                               </select>-->
-                              <multiselect v-model="almacenamientoProyecto.decisiones" :multiple="true" :options="decisiones" track-by="desiid" label="desidescripcion"></multiselect>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="" class="bmd-label-floating">Contextos</label>
-                              <multiselect v-model="almacenamientoProyecto.contextos" :multiple="true" :options="contextos" track-by="contextoid" label="descripcion"></multiselect>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="" class="bmd-label-floating">Tipo</label>
-                              <select class="form-control" v-model="almacenamientoProyecto.tiproid">
-                                <option value="">Seleccione</option>
-                                <option v-for="tp in tiposProyecto" :value="tp.tiproid"> [[ tp.nombre ]] </option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="" class="bmd-label-floating">Equipos</label>
-                              <multiselect v-model="almacenamientoProyecto.plantillas" :multiple="true" :options="plantillas" track-by="planid" label="descripcion"></multiselect>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="" class="bmd-label-floating">Fecha Inicio</label>
-                              <!--<input class="form-control" type="date" v-model="almacenamientoProyecto.proyfechainicio" />-->
-                              <datepicker
-                                      @selected="formateoFechaInicio"
-                                      bootstrap-styling
-                                      placeholder="Fecha de Inicio">
-                              </datepicker>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="" class="bmd-label-floating">Fecha Cierre</label>
-                              <!--<input class="form-control" type="date" v-model="almacenamientoProyecto.proyfechacierre" />-->
-                              <datepicker
-                                      @selected="formateoFechaFin"
-                                      bootstrap-styling
-                                      placeholder="Fecha de Fin">
-                              </datepicker>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
+                        <multiselect v-model="almacenamientoProyecto.decisiones" :multiple="true" :options="decisiones"
+                          track-by="decs_id" label="decs_name"></multiselect>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="" class="bmd-label-floating">Contextos</label>
+                        <multiselect v-model="almacenamientoProyecto.contextos" :multiple="true" :options="contextos"
+                          track-by="context_id" label="context_description"></multiselect>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="" class="bmd-label-floating">Tipo</label>
+                        <select class="form-control" v-model="almacenamientoProyecto.tiproid">
+                          <option value="">Seleccione</option>
+                          <option v-for="tp in tiposProyecto" :value="tp.projtype_id"> [[ tp.projtype_name ]] </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="" class="bmd-label-floating">Equipos</label>
+                        <multiselect v-model="almacenamientoProyecto.plantillas" :multiple="true" :options="plantillas"
+                          track-by="team_id" label="team_name"></multiselect>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="" class="bmd-label-floating">Fecha Inicio</label>
+                        <!--<input class="form-control" type="date" v-model="almacenamientoProyecto.proyfechainicio" />-->
+                        <datepicker @selected="formateoFechaInicio" bootstrap-styling placeholder="Fecha de Inicio">
+                        </datepicker>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="" class="bmd-label-floating">Fecha Cierre</label>
+                        <!--<input class="form-control" type="date" v-model="almacenamientoProyecto.proyfechacierre" />-->
+                        <datepicker @selected="formateoFechaFin" bootstrap-styling placeholder="Fecha de Fin">
+                        </datepicker>
+                      </div>
                     </div>
                   </div>
-
-                  <!-- Listado de Dimensiones -->
-                  <div class="row">
-                      <div class="container">
-
-                        <div>
-                          <button class="pull-right btn" type="button" @click.prevent="agregarDelimitacionGeografica()" :disabled="!delimitacionGeografica.nombre || !delimitacionGeografica.geojson || delimitacionGeograficaEdicion">
-                            Agregar Dimensión
-                          </button>
-                          <button class="pull-right btn" @click.prevent="restablecerMapa();restablecerDelimitacionGeografica();">
-                            Nuevo
-                          </button>
-                          <h2> Dimensiones </h2>
-                        </div>
-
-                        <div class="table-responsive">
-                          <table class="table table-striped">
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Acciones</th>
-                          </tr>
-                          <tr v-for="(dg, index) in almacenamientoProyecto.delimitacionesGeograficas">
-                            <td> [[ dg.nombre ]] </td>
-                            <td>
-                              <button @click="detalleDelimitacionGeografica(dg, index)" class="btn">Editar</button>
-                              <button class="btn" @click="eliminarDelimitacionGeografica(index)">Eliminar</button>
-                            </td>
-                          </tr>
-                        </table>
-                        </div>
-                      </div>
-                  </div>
-
-                  <!--  Almacenamiento de Dimensiones -->
-                  <div class="row">
-                    <div class="container">
-                      <div>
-                        <button class="pull-right btn" type="button" :disabled="!delimitacionGeograficaEdicion" @click.prevent="actualizarDelimitacionGeografica()">Actualizar</button>
-                        <button class="pull-right btn" type="button" :disabled="!delimitacionGeograficaEdicion" @click.prevent="restablecerMapa()" >Restablecer Mapa</button>
-                        <h2>Crear Dimensiones </h2>
-                      </div>
-                      <form action="">
-                        <div class="row">
-                          <div class="offset-md-3 col-md-6">
-                            <input v-model="delimitacionGeografica.nombre" type="text" class="form-control" placeholder="Nombre de dimension"> <br />
-                          </div>
-                          <div class="col-md-12">
-                            <div id="dimension"></div>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-
-                  </div>
-
-                  <!-- Guardado De proyecto -->
-                  <div align="center">
-                    <button class="btn" @click="almacenarProyecto" :disabled="!almacenamientoProyecto.proynombre || !almacenamientoProyecto.proydescripcion || !almacenamientoProyecto.tiproid || !almacenamientoProyecto.decisiones || !almacenamientoProyecto.contextos || !almacenamientoProyecto.plantillas || !almacenamientoProyecto.delimitacionesGeograficas.length > 0 || !almacenamientoProyecto.proyfechainicio || !almacenamientoProyecto.proyfechacierre">Guardar Proyecto</button>
-                  </div>
-
-                </div>
+                </form>
               </div>
             </div>
-          </div>
 
-          <!-- Edición de Proyecto -->
-          <div class="modal fade" id="editar-proyecto">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Editar Proyecto</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
+            <!-- Listado de Dimensiones -->
+            <div class="row">
+              <div class="container">
+
+                <h3 align="center"> Dimensiones territoriales</h3>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="" class="bmd-label-floating">Dimensiones precargadas</label>
+                    <multiselect v-model="almacenamientoProyecto.dimensionesPre" :multiple="true" 
+                      :options="dimensionesPre" track-by="dimension_id" label="dimension_name"></multiselect>
+                  </div>
+                  <button class="pull-right btn" @click.prevent="pintarDimensionesSeleccion">
+                        Pintar
+                    </button>
                 </div>
-                <div class="modal-body">
-                  <form action="">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Nombre</label>
-                          <input v-model="edicionProyecto.proynombre" type="text" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Descripción</label>
-                          <!--<textarea v-model="edicionProyecto.proydescripcion" class="form-control"></textarea>-->
-                          <editor
-                             api-key="yppjpwidnfhsiwqjvltoxykexydqk3m1xk218rj4r1lvk85v"
-                             :init="{
-                               height: 300,
-                               menubar: false,
-                               plugins: 'link',
-                               toolbar:
-                                 'undo redo | formatselect | bold italic backcolor | \
-                                 alignleft aligncenter alignright alignjustify | \
-                                 bullist numlist outdent indent | removeformat | link'
-                             }"
-                             v-model="edicionProyecto.proydescripcion"
-                           />
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="" class="bmd-label-floating">Decisiones</label>
-                          <multiselect v-model="edicionProyecto.decisiones" :multiple="true" :options="decisiones" track-by="desiid" label="desidescripcion"></multiselect>
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label for="" class="bmd-label-floating">Contextos</label>
-                          <multiselect v-model="edicionProyecto.contextos" :multiple="true" :options="contextos" track-by="contextoid" label="descripcion"></multiselect>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="" class="bmd-label-floating">Fecha Inicio</label>
-                          <input class="form-control" type="date" v-model="edicionProyecto.proyfechainicio" />
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="" class="bmd-label-floating">Fecha Cierre</label>
-                          <input class="form-control" type="date" v-model="edicionProyecto.proyfechacierre" />
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="" class="bmd-label-floating">Tipo</label>
-                          <select class="form-control" v-model="edicionProyecto.tiproid">
-                            <option value="">Seleccione</option>
-                            <option v-for="tp in tiposProyecto" :value="tp.tiproid"> [[ tp.nombre ]] </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div align="center" class="col-md-12">
-                        <div class="form-group">
-                          <button :disabled="!edicionProyecto.proynombre || !edicionProyecto.proydescripcion || !edicionProyecto.decisiones || !edicionProyecto.contextos || !edicionProyecto.proyfechainicio || !edicionProyecto.proyfechacierre || !edicionProyecto.tiproid" class="btn" @click="editarProyecto()" type="button">Editar</button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
+
+
               </div>
             </div>
-          </div>
 
+            <!--  Almacenamiento de Dimensiones -->
+            <div class="row">
+              <div class="container">
+
+                <div class="mt-3">
+                  <h4 align="center">Crear Dimensión</h4>
+                </div>
+
+
+                <form action="">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="offset-md-12">
+                        <input v-model="delimitacionGeografica.nombre" type="text" class="form-control"
+                          placeholder="Nombre de dimension" style="height: 100%;"> <br />
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <button class="pull-right btn"
+                        @click.prevent="restablecerMapa();restablecerDelimitacionGeografica();">
+                        Limpiar mapa
+                      </button>
+                      <button class="pull-right btn" type="button" @click.prevent="agregarDelimitacionGeografica()"
+                        :disabled="!delimitacionGeografica.nombre || !delimitacionGeografica.geojson || delimitacionGeograficaEdicion">
+                        Agregar</button>
+                      <button class="pull-right btn" type="button" :disabled="!delimitacionGeograficaEdicion"
+                        @click.prevent="actualizarDelimitacionGeografica()">Actualizar</button>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div id="dimension"></div>
+                    </div>
+                  </div>
+                  
+                  <div class="table-responsive" align="center">
+                    <table class="table">
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                      </tr>
+                      <tr v-for="(dg, index) in almacenamientoProyecto.delimitacionesGeograficas">
+                        <td> [[ dg.nombre ]] </td>
+                        <td>
+                          <button @click="detalleDelimitacionGeografica(dg, index)" class="btn">Editar nombre</button>
+                          <button class="btn" @click="eliminarDelimitacionGeografica(index)">Eliminar</button>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+
+                </form>
+              </div>
+
+            </div>
+
+            <!-- Guardado De proyecto -->
+            <div align="center">
+              <button class="btn" @click="almacenarProyecto"
+                :disabled="!almacenamientoProyecto.proynombre || !almacenamientoProyecto.proydescripcion || !almacenamientoProyecto.tiproid || !almacenamientoProyecto.decisiones || !almacenamientoProyecto.contextos || !almacenamientoProyecto.plantillas || (!almacenamientoProyecto.delimitacionesGeograficas.length > 0 || !almacenamientoProyecto.dimensionesPre > 0) || !almacenamientoProyecto.proyfechainicio || !almacenamientoProyecto.proyfechacierre">Guardar
+                Proyecto</button>
+            </div>
+
+          </div>
         </div>
+      </div>
     </div>
+
+    <!-- Edición de Proyecto -->
+    <div class="modal fade" id="editar-proyecto">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Proyecto</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Nombre</label>
+                    <input v-model="edicionProyecto.proj_name" type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Descripción</label>
+                    <textarea v-model="edicionProyecto.proj_description" class="form-control"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="" class="bmd-label-floating">Decisiones</label>
+                    <multiselect v-model="edicionProyecto.decisiones" :multiple="true" :options="decisiones"
+                      track-by="decs_id" label="decs_name"></multiselect>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="" class="bmd-label-floating">Contextos</label>
+                    <multiselect v-model="edicionProyecto.contextos" :multiple="true" :options="contextos"
+                      track-by="context_id" label="context_description"></multiselect>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="" class="bmd-label-floating">Fecha Inicio</label>
+                    <input class="form-control" type="date" v-model="edicionProyecto.proj_start_date" />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="" class="bmd-label-floating">Fecha Cierre</label>
+                    <input class="form-control" type="date" v-model="edicionProyecto.proj_close_date" />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="" class="bmd-label-floating">Tipo</label>
+                    <select class="form-control" v-model="edicionProyecto.tiproid">
+                      <option value="">Seleccione</option>
+                      <option v-for="tp in tiposProyecto" :value="tp.projtype_id"> [[ tp.projtype_name ]] </option>
+                    </select>
+                  </div>
+                </div>
+                <div align="center" class="col-md-12">
+                  <div class="form-group">
+                    <button
+                      :disabled="!edicionProyecto.proynombre || !edicionProyecto.proydescripcion || !edicionProyecto.decisiones || !edicionProyecto.contextos || !edicionProyecto.proyfechainicio || !edicionProyecto.proyfechacierre || !edicionProyecto.tiproid"
+                      class="btn" @click="editarProyecto()" type="button">Editar</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 {% endblock %}

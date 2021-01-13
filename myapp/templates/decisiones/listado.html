@@ -13,7 +13,7 @@
                 <div class="card-header card-header-primary">
                   <button class="btn button-right" data-target="#agregar-decision" data-toggle="modal">Crear Decisión</button>
                   <h4 class="card-title ">Decisiones</h4>
-                  <p class="card-category"> Gestión de Decisiones </p>
+                  <h5 class="card-category"> Hipótesis de la cual se parte al momento de llevar acabo un proyecto </h5>
                 </div>
                 <div class="card-header">
                   <form action="">
@@ -70,7 +70,7 @@
                           </a>
                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a @click.prevent="edicionDecision = data.item" data-toggle="modal" data-target="#editar-decision" class="dropdown-item" href="#"> Edición </a>
-                            <a @click.prevent="eliminarDecision(data.item.desiid)" class="dropdown-item" href="#"> Eliminación </a>
+                            <a @click.prevent="eliminarDecision(data.item.decs_id)" class="dropdown-item" href="#"> Eliminación </a>
                           </div>
                         </div>
                       </template>
@@ -105,8 +105,14 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
+                          <label class="bmd-label-floating">Nombre</label>
+                            <textarea v-model="almacenamientoDecision.decs_name" class="form-control"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
                           <label class="bmd-label-floating">Descripción</label>
-                            <textarea v-model="almacenamientoDecision.desidescripcion" class="form-control"></textarea>
+                            <textarea v-model="almacenamientoDecision.decs_description" class="form-control"></textarea>
                         </div>
                       </div>
                       <!--<div class="col-md-12">
@@ -120,7 +126,7 @@
                       </div>-->
                       <div align="center" class="col-md-12">
                         <div class="form-group">
-                          <button :disabled="!almacenamientoDecision.desidescripcion" class="btn" @click="almacenarDecision()" type="button">Guardar</button>
+                          <button :disabled="!almacenamientoDecision.decs_name || !almacenamientoDecision.decs_description" class="btn" @click="almacenarDecision()" type="button">Guardar</button>
                         </div>
                       </div>
                     </div>
@@ -145,8 +151,14 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
+                          <label class="bmd-label-floating">Nombre</label>
+                            <textarea v-model="edicionDecision.decs_name" class="form-control"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
                           <label class="bmd-label-floating">Descripción</label>
-                            <textarea v-model="edicionDecision.desidescripcion" class="form-control"></textarea>
+                            <textarea v-model="edicionDecision.decs_description" class="form-control"></textarea>
                         </div>
                       </div>
                       <!--<div class="col-md-12">
@@ -160,7 +172,7 @@
                       </div>-->
                       <div align="center" class="col-md-12">
                         <div class="form-group">
-                          <button :disabled="!edicionDecision.desidescripcion || !edicionDecision.userid" class="btn" @click="editarDecision()" type="button">Editar</button>
+                          <button :disabled="!edicionDecision.decs_description || !edicionDecision.decs_name" class="btn" @click="editarDecision()" type="button">Editar</button>
                         </div>
                       </div>
                     </div>

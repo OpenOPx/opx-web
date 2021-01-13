@@ -8,7 +8,7 @@ let login = new Vue({
     methods: {
         login(){
 
-            if(!this.loginInfo.hasOwnProperty('username') || !this.loginInfo.hasOwnProperty('password')){
+            if(!this.loginInfo.username || !this.loginInfo.password){
 
                 Swal.fire({
                     title: 'Error',
@@ -34,10 +34,9 @@ let login = new Vue({
                         'Content-type': 'application/x-www-form-urlencoded'
                     }
                 })
-                .then(response => {
-
+                .then(response => {             
                     sessionStorage.setItem('userinfo', JSON.stringify(response.data));
-
+                    localStorage.setItem('userinfo', JSON.stringify(response.data));
                     this.loader(false);
 
                     /*document.cookie = "csrftoken=wG2xUInpzPR787Bz8FXDIONSDYoemwW3;domain=http://kf.oim-opc.pre;path=/"
@@ -49,10 +48,9 @@ let login = new Vue({
                 .catch(error => {
 
                     this.loader(false);
-
                     Swal.fire({
                         title: 'Error',
-                        text: 'Usuario y/o contraseña incorrecto(s)',
+                        text: error.response.data.message,
                         type: 'error'
                     });
                 });

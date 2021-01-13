@@ -1,0 +1,172 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+
+<div class="container-fluid" id="reportes-individual-miembro">
+
+  <div :class="{loading:loading}"></div>
+
+  <!--<div :class="{loading:loading}"></div>-->
+
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title ">Información personal </h4>
+        </div>
+
+        <div class="card-header">
+
+        </div>
+
+        <div class="card-body">
+          <div class="col-md-12" id="right">
+            <div class="content">
+              <form action="">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="bmd-label-floating">Nombre</label>
+                      <input v-model="persona.pers_name" value="persona.pers_name" type="text" readonly=»readonly class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="bmd-label-floating">Apellido</label>
+                      <input v-model="persona.pers_lastname" type="text" readonly=»readonly class="form-control">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="bmd-label-floating">Correo electrónico</label>
+                      <input type="email" v-model="persona.useremail" readonly=»readonly class="form-control" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Teléfono</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.pers_telephone" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Nivel educativo</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.educlevel_name" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Género</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.gender_name" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Estado</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.isactive" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Empleado</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.isemployee" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Barrio</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.neighb_name" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Fecha de nacimiento</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.pers_birthdate" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Fecha de creación</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.pers_creation_date" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Puntaje promedio</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.pers_score" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="" class="bmd-label-floating">Rol</label>
+                      <input class="form-control" type="text" readonly=»readonly v-model="persona.role_name" />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Equipos de una persona -->
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title ">Equipos </h4>
+        </div>
+        <div class="card-header">
+          <form action="">
+            <div class="form-group">
+              <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filterTeam">
+            </div>
+          </form>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <b-table :current-page="paginationTeam.currentPage" :fields="teamFields" :items="filteredTeam"
+              :per-page="paginationTeam.perPage">
+            </b-table>
+
+            <b-pagination v-model="paginationTeam.currentPage" :per-page="paginationTeam.perPage"
+              :total-rows="filteredTeam.length"></b-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyectos de una persona -->
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title ">Proyectos </h4>
+        </div>
+        <div class="card-header">
+          <form action="">
+            <div class="form-group">
+              <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filterProject">
+            </div>
+          </form>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <b-table :current-page="paginationProject.currentPage" :fields="projectFields" :items="filteredProject"
+              :per-page="paginationProject.perPage">
+            </b-table>
+
+            <b-pagination v-model="paginationProject.currentPage" :per-page="paginationProject.perPage"
+              :total-rows="filteredProject.length"></b-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+
+{% endblock %}

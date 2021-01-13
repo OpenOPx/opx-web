@@ -10,10 +10,11 @@ from rest_framework.permissions import (
     IsAuthenticated
 )
 
-from myapp.models import Proyecto, Rol, Usuario, Tarea, Instrumento, Encuesta, NivelEducativo, Barrio, Equipo, ContextoProyecto, DecisionProyecto, DelimitacionGeografica
+from myapp.models import Project, Role, User, Task, Neighborhood, Team, ProjectContext
+# TOCA IR COLOCANDO ESTO - Survey, Instrumento, Encuesta, NivelEducativo, Barrio, Equipo, ContextoProyecto, DecisionProyecto, DelimitacionGeografica
 from myapp.view.utilidades import dictfetchall, reporteEstadoProyecto, reporteEstadoTarea
-from myapp.views import detalleFormularioKoboToolbox
-
+# TOCA IR COLOCANDO ESTO -  from myapp.views import detalleFormularioKoboToolbox
+from myapp import models
 import csv
 import json
 import os
@@ -31,23 +32,23 @@ def datosGenerales(request):
 
     with connection.cursor() as cursor:
 
-        cantidadUsuarios = "SELECT count(*) as cantidad from v1.usuarios;"
+        cantidadUsuarios = "SELECT count(*) as cantidad from opx.user;"
         cursor.execute(cantidadUsuarios)
         cantidadUsuarios = dictfetchall(cursor)[0]['cantidad']
 
-        cantidadDecisiones = "SELECT count(*) as cantidad from v1.decisiones;"
+        cantidadDecisiones = "SELECT count(*) as cantidad from opx.decision;"
         cursor.execute(cantidadDecisiones)
         cantidadDecisiones = dictfetchall(cursor)[0]['cantidad']
 
-        cantidadContextos = "SELECT count(*) as cantidad from v1.contextos;"
+        cantidadContextos = "SELECT count(*) as cantidad from opx.context;"
         cursor.execute(cantidadContextos)
         cantidadContextos = dictfetchall(cursor)[0]['cantidad']
 
-        cantidadProyectos = "SELECT count(*) as cantidad from v1.proyectos;"
+        cantidadProyectos = "SELECT count(*) as cantidad from opx.project;"
         cursor.execute(cantidadProyectos)
         cantidadProyectos = dictfetchall(cursor)[0]['cantidad']
 
-        cantidadTareas = "SELECT count(*) as cantidad from v1.tareas;"
+        cantidadTareas = "SELECT count(*) as cantidad from opx.task;"
         cursor.execute(cantidadTareas)
         cantidadTareas = dictfetchall(cursor)[0]['cantidad']
 
@@ -74,7 +75,7 @@ def datosGenerales(request):
 @permission_classes((IsAuthenticated,))
 def usuariosXRol(request):
 
-    roles = Rol.objects.all()
+    roles = Role.objects.all()
 
     data = {
         'roles': [],
@@ -85,7 +86,7 @@ def usuariosXRol(request):
 
         with connection.cursor() as cursor:
 
-            query = "SELECT count(*) as cantidad from v1.usuarios where rolid = '" + str(rol.rolid) + "';"
+            query = "SELECT count(*) as cantidad from opx.person where role_id = '" + str(rol.rolid) + "';"
             cursor.execute(query)
 
             data['roles'].append(rol.rolname)
@@ -128,7 +129,7 @@ def usuariosXGenero(request):
 
         with connection.cursor() as cursor:
 
-             query = "SELECT count(*) as cantidad from v1.usuarios where generoid = '{}';" \
+             query = "SELECT count(*) as cantidad from opx.user where gender_id= '{}';" \
                      .format(genero['value'])
 
              cursor.execute(query)
@@ -153,7 +154,7 @@ def usuariosXGenero(request):
 @permission_classes((IsAuthenticated,))
 def usuariosXNivelEducativo(request):
 
-    nivelesEducativos = NivelEducativo.objects.all()
+    nivelesEducativos = EducationLevel.objects.all()
 
     data = {
         'niveles_educativos': [],
@@ -162,7 +163,7 @@ def usuariosXNivelEducativo(request):
 
     for nv in nivelesEducativos:
         with connection.cursor() as cursor:
-            query = "SELECT count(*) as cantidad from v1.usuarios where nivel_educativo_id = '{}';" \
+            query = "SELECT count(*) as cantidad from opx.usuer where education_level_id = '{}';" \
                     .format(nv.nivelid)
 
             cursor.execute(query)
@@ -187,7 +188,7 @@ def usuariosXNivelEducativo(request):
 @permission_classes((IsAuthenticated,))
 def usuariosXBarrio(request):
 
-    barrios = Barrio.objects.all()
+    barrios = Neighborhood.objects.all()
 
     data = {
         'barrios': [],
@@ -196,7 +197,7 @@ def usuariosXBarrio(request):
 
     for b in barrios:
         with connection.cursor() as cursor:
-            query = "SELECT count(*) as cantidad from v1.usuarios where barrioid = {};" \
+            query = "SELECT count(*) as cantidad from opx.user where neighborhood_id = {};" \
                     .format(b.barrioid)
 
             cursor.execute(query)
@@ -245,7 +246,7 @@ def tareasXTipo(request):
 
         with connection.cursor() as cursor:
 
-             query = "SELECT count(*) as cantidad from v1.tareas where taretipo = {}" \
+             query = "SELECT count(*) as cantidad from opx.task_type where task_type_id = {}" \
                      .format(tipo['value'])
 
              cursor.execute(query)
@@ -270,9 +271,9 @@ def tareasXTipo(request):
 @permission_classes((IsAuthenticated,))
 def ranking(request):
 
-    usuarios = Usuario.objects \
-               .order_by('-puntaje') \
-               .values('userfullname', 'puntaje')
+    usuarios = User.objects \
+               .order_by('-pers_score') \
+               .values('pers_name', 'pers_score')
 
     response = {
         'code': 200,
@@ -300,9 +301,9 @@ def proyectosTareas(request):
 
         fechaActual = date.today().strftime("%Y-%m-%d")
 
-        query = "SELECT p.proyid, p.proynombre, p.proydescripcion, proyfechacreacion, p.proyfechacierre from v1.proyectos as p " \
-                "WHERE p.proyfechacreacion <=  '{0} 23:59:59' " \
-                "AND p.proyfechacierre >= '{0}'" \
+        query = "SELECT p.proj_id, p.proj_name, p.proj_description, p.proj_creation_date, p.proj_creation_close from opx.project as p " \
+                "WHERE p.proj_creation_date <=  '{0} 23:59:59' " \
+                "AND p.proj_creation_close >= '{0}'" \
                 .format(fechaActual)
 
         cursor.execute(query)
@@ -319,30 +320,30 @@ def proyectosTareas(request):
         tareasProyecto = []
 
         project = {
-            'id': proyecto['proyid'],
-            'name': proyecto['proynombre'],
+            'id': proyecto['proj_id'],
+            'name': proyecto['proj_name'],
             'start': proyecto['proyfechacreacion'],
             'end': proyecto['proyfechacierre'],
             'dependencies': '',
             'type': 'project'
         }
 
-        tareas = Tarea.objects.filter(proyid__exact=proyecto['proyid'])
+        tareas = Task.objects.filter(proyid__exact=proyecto['proj_id'])
 
         for tarea in tareas:
 
-            if tarea.taretipo == 1:
+            if task.task_type_id == 1:
 
                 task = {
-                    'id': tarea.tareid,
-                    'name': tarea.tarenombre,
-                    'start': proyecto['proyfechacreacion'],
-                    'end': proyecto['proyfechacierre'],
-                    'dependencies': proyecto['proyid'],
+                    'id': tarea.task_id,
+                    'name': tarea.task_name,
+                    'start': proyecto['proj_creation_date'],
+                    'end': proyecto['proj_creation_close'],
+                    'dependencies': proyecto['proj_id'],
                     'type': 'task'
                 }
 
-                encuestas = Encuesta.objects.filter(tareid__exact=tarea.tareid)
+                encuestas = Encuesta.objects.filter(task_id__exact=tarea.task_id) #FALTA HACER ENCUESTAAAAAAAAAAAS
                 progreso = (len(encuestas) * 100) / tarea.tarerestriccant
                 task['progress'] = progreso
                 tareasProyecto.append(task)
@@ -383,8 +384,8 @@ def estadoActualProyectos(request):
 
         fechaActual = date.today().strftime("%Y-%m-%d")
 
-        query = "SELECT p.proyid, p.proynombre, p.proydescripcion, proyfechacreacion, u.userfullname from v1.proyectos as p " \
-                "INNER JOIN v1.usuarios as u ON u.userid = p.proypropietario " \
+        query = "SELECT p.proyid, p.proynombre, p.proydescripcion, proyfechacreacion, u.userfullname from opx.proyectos as p " \
+                "INNER JOIN opx.usuarios as u ON u.userid = p.proypropietario " \
                 "WHERE p.proyfechacreacion <=  '{0} 23:59:59' " \
                 "AND p.proyfechacierre >= '{0}'" \
                 .format(fechaActual)
@@ -437,7 +438,7 @@ def proyectosTareasVencidos(request):
 
         fechaActual = date.today().strftime("%Y-%m-%d")
 
-        query = "SELECT p.proyid, p.proynombre, p.proydescripcion, proyfechacreacion, p.proyfechacierre from v1.proyectos as p " \
+        query = "SELECT p.proyid, p.proynombre, p.proydescripcion, proyfechacreacion, p.proyfechacierre from opx.proyectos as p " \
                 "WHERE p.proyfechacreacion <=  '{0} 23:59:59' " \
                 "AND p.proyfechacierre <= '{0}'" \
                 .format(fechaActual)
@@ -520,8 +521,8 @@ def estadoActualProyectosVencidos(request):
 
         fechaActual = date.today().strftime("%Y-%m-%d")
 
-        query = "SELECT p.proyid, p.proynombre, p.proydescripcion, proyfechacreacion, u.userfullname from v1.proyectos as p " \
-                "INNER JOIN v1.usuarios as u ON u.userid = p.proypropietario " \
+        query = "SELECT p.proyid, p.proynombre, p.proydescripcion, proyfechacreacion, u.userfullname from opx.proyectos as p " \
+                "INNER JOIN opx.usuarios as u ON u.userid = p.proypropietario " \
                 "WHERE p.proyfechacreacion <=  '{0} 23:59:59' " \
                 "AND p.proyfechacierre <= '{0}'" \
                 .format(fechaActual)
@@ -592,7 +593,7 @@ def tareasXTipoProyecto(request, proyid):
 
             with connection.cursor() as cursor:
 
-                 query = "SELECT count(*) as cantidad from v1.tareas where taretipo = {} and proyid = '{}'" \
+                 query = "SELECT count(*) as cantidad from opx.tareas where taretipo = {} and proyid = '{}'" \
                          .format(tipo['value'], proyid)
 
                  cursor.execute(query)
@@ -658,7 +659,7 @@ def tareasXEstadoProyecto(request, proyid):
 
             with connection.cursor() as cursor:
 
-                 query = "SELECT count(*) as cantidad from v1.tareas where tareestado = {} and proyid = '{}'" \
+                 query = "SELECT count(*) as cantidad from opx.tareas where tareestado = {} and proyid = '{}'" \
                          .format(tipo['value'], proyid)
 
                  cursor.execute(query)
@@ -711,13 +712,11 @@ def usuariosXRolProyecto(request, proyid):
 
             with connection.cursor() as cursor:
 
-                query = "SELECT count(*) as cantidad from v1.equipos as e " \
-                        "INNER JOIN v1.usuarios as u ON u.userid = e.userid " \
+                query = "SELECT count(*) as cantidad from opx.equipos as e " \
+                        "INNER JOIN opx.usuarios as u ON u.userid = e.userid " \
                         "where u.rolid = '{}' " \
                         "AND e.proyid = '{}';" \
                         .format(str(rol.rolid), str(proyid))
-
-                print(query)
 
                 cursor.execute(query)
 
@@ -767,8 +766,8 @@ def usuariosXBarrioProyecto(request, proyid):
 
         for b in barrios:
             with connection.cursor() as cursor:
-                query = "SELECT count(*) as cantidad from v1.equipos as e " \
-                        "INNER JOIN v1.usuarios as u ON u.userid = e.userid " \
+                query = "SELECT count(*) as cantidad from opx.equipos as e " \
+                        "INNER JOIN opx.usuarios as u ON u.userid = e.userid " \
                         "where u.barrioid = {} " \
                         "AND e.proyid = '{}'" \
                         .format(b.barrioid, str(proyid))
@@ -836,8 +835,8 @@ def usuariosXGeneroProyecto(request, proyid):
 
             with connection.cursor() as cursor:
 
-                 query = "SELECT count(*) as cantidad from v1.equipos as e " \
-                         "INNER JOIN v1.usuarios as u ON u.userid = e.userid " \
+                 query = "SELECT count(*) as cantidad from opx.equipos as e " \
+                         "INNER JOIN opx.usuarios as u ON u.userid = e.userid " \
                          "where u.generoid = '{}' " \
                          "AND e.proyid = '{}';" \
                          .format(genero['value'], str(proyid))
@@ -890,8 +889,8 @@ def usuariosXNivelEducativoProyecto(request, proyid):
 
         for nv in nivelesEducativos:
             with connection.cursor() as cursor:
-                query = "SELECT count(*) as cantidad from v1.equipos as e " \
-                        "INNER JOIN v1.usuarios as u ON u.userid = e.userid " \
+                query = "SELECT count(*) as cantidad from opx.equipos as e " \
+                        "INNER JOIN opx.usuarios as u ON u.userid = e.userid " \
                         "where u.nivel_educativo_id = '{}' " \
                         "AND e.proyid = '{}';" \
                         .format(nv.nivelid, str(proyid))
@@ -1172,8 +1171,8 @@ def instrumentosProyecto(request, proyid):
 
             query = "SELECT DISTINCT ON (t.instrid) \
                     t.instrid, i.instrnombre, i.instrtipo \
-                    FROM v1.tareas as t \
-                    INNER JOIN v1.instrumentos as i ON i.instrid = t.instrid"
+                    FROM opx.tareas as t \
+                    INNER JOIN opx.instrumentos as i ON i.instrid = t.instrid"
 
             cursor.execute(query)
 
@@ -1228,8 +1227,8 @@ def usuariosXBarrioEspecifico(request, proyid, keyword):
 
         # Consulta de usuarios
         with connection.cursor() as cursor:
-            query = "SELECT u.userfullname from v1.equipos as e " \
-                    "INNER JOIN v1.usuarios as u ON u.userid = e.userid " \
+            query = "SELECT u.userfullname from opx.equipos as e " \
+                    "INNER JOIN opx.usuarios as u ON u.userid = e.userid " \
                     "where u.barrioid = {} " \
                     "AND e.proyid = '{}'" \
                 .format(barrio.barrioid, str(proyid))
@@ -1323,15 +1322,12 @@ def limpiezaDatos(request, proyid):
 
             contenidoFormateado.append(data)
 
-    #print(contenidoFormateado)
-
     csvFile = io.StringIO()
     writer = csv.writer(csvFile)
 
     for cf in contenidoFormateado:
         writer.writerow(cf)
 
-    print(csvFile.getValue())
 
 # ================ Vistas ===============
 
@@ -1343,6 +1339,31 @@ def limpiezaDatos(request, proyid):
 def estadisticasView(request):
 
     return render(request, "reportes/antes.html")
+
+##
+# @brief Plantilla de estadisticas generales del sistema
+# @param request instancia HttpRequest
+# @return plantilla HTML
+#
+def estadisticasProyectosView(request):
+
+    return render(request, "reportes/listadoproyectos.html")
+
+##
+# @brief Plantilla de estadisticas generales del sistema
+# @param request instancia HttpRequest
+# @return plantilla HTML
+#
+def proyectoIndividualView(request, projid):
+    try:
+        proyecto = models.Project.objects.get(pk=projid)
+        data =  render(request, 'reportes/proyectoindividual.html', {'proyecto':proyecto})
+    except ObjectDoesNotExist:
+        data = HttpResponse("", status=404)
+    except ValidationError:
+        data = HttpResponse("", status=400)
+    return data
+
 
 ##
 # @brief Plantilla de estadisticas correspondiente a los proyectos que se encuentran en ejecución
@@ -1371,7 +1392,7 @@ def estadisticasDespuesView(request):
 def estadisticasDetalleView(request, proyid):
 
     try:
-        proyecto = Proyecto.objects.get(pk=proyid)
+        proyecto = Project.objects.get(pk=proyid)
 
         return render(request, "reportes/detalle.html", {'proyecto': proyecto})
 

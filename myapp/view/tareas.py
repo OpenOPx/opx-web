@@ -29,11 +29,166 @@ from rest_framework.permissions import (
     IsAuthenticated
 )
 
-from myapp.views import detalleFormularioKoboToolbox
-from myapp.view.utilidades import dictfetchall, obtenerParametroSistema, obtenerEmailsEquipo, usuarioAutenticado
+from myapp.view import koboclient, notificaciones
+from myapp.view.utilidades import dictfetchall, obtenerParametroSistema, getPersonsIdByProject, usuarioAutenticado
 from myapp.view.notificaciones import gestionCambios
 
+ROL_SUPER_ADMIN = '8945979e-8ca5-481e-92a2-219dd42ae9fc'
+ROL_PROYECTISTA = '628acd70-f86f-4449-af06-ab36144d9d6a'
+ROL_VOLUNTARIO = '0be58d4e-6735-481a-8740-739a73c3be86'
+ROL_VALIDADOR = '53ad3141-56bb-4ee2-adcf-5664ba03ad65'
+
+
 # =========================== Tareas ==============================
+
+##
+# @brief recurso de almacenamiento de Tareas
+# @param request Instancia HttpRequest
+# @return cadena JSON
+#
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def almacenamientoTarea(request):
+    restricciones = models.TaskRestriction(
+        start_time = request.POST.get('HoraInicio'),
+        end_time = request.POST.get('HoraCierre'),
+        task_start_date = request.POST.get('tarfechainicio'),
+        task_end_date = request.POST.get('tarfechacierre')
+    )
+
+    territorioSubconjunto = models.TerritorialDimension(
+        dimension_name = request.POST.get('nombreSubconjunto'),
+        dimension_geojson = request.POST.get('geojsonsubconjunto'),
+        dimension_type = models.DimensionType.objects.get(pk = "35b0b478-9675-45fe-8da5-02ea9ef88f1b")
+    )
+
+    territorioSubconjunto.full_clean()
+    territorioSubconjunto.save()
+
+    restricciones.full_clean()
+    restricciones.save()
+    proyid = request.POST.get('proyid')
+
+    dimen = models.TerritorialDimension.objects.get(pk = request.POST.get('dimensionIDparaTerritorialD'))
+
+    with transaction.atomic():
+        tarea = models.Task(
+            task_name = request.POST.get('tarenombre'),
+            task_type = models.TaskType.objects.get(pk = request.POST.get('taretipo')),
+            task_quantity = request.POST.get('tarerestriccant'),
+            task_priority = models.TaskPriority.objects.get(priority_number = request.POST.get('tareprioridad')),
+            task_description = request.POST.get('taredescripcion'),
+            project = models.Project.objects.get(pk = proyid),
+            task_observation = "esto es para reportes",
+            proj_dimension = dimen,
+            instrument = models.Instrument.objects.get(pk = request.POST.get('instrid')),
+            territorial_dimension = territorioSubconjunto,
+            task_restriction = restricciones,
+        )
+
+        try:
+            tarea.full_clean()
+            tarea.save()
+            data = serializers.serialize('python', [tarea])
+
+            response = {
+                'code':     201,
+                'tarea':    data,
+                'status':   'success'
+            }
+
+        except ValidationError as e:
+            territorioSubconjunto.delete()
+            restricciones.delete()
+            response = {
+                'code':     400,
+                'errors':   dict(e),
+                'status':   'error'
+            }
+
+        except IntegrityError as e:
+            territorioSubconjunto.delete()
+            restricciones.delete()
+            response = {
+                'code':     400,
+                'message':  str(e),
+                'status':   'success'
+            }
+
+    return JsonResponse(response, safe=False, status=response['code'])##
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def almacenamientoCampana(request):
+    restricciones = models.TaskRestriction(
+        start_time = request.POST.get('HoraInicio'),
+        end_time = request.POST.get('HoraCierre'),
+        task_start_date = request.POST.get('tarfechainicio'),
+        task_end_date = request.POST.get('tarfechacierre')
+    )
+
+    territorioSubconjunto = models.TerritorialDimension(
+        dimension_name = request.POST.get('nombreSubconjunto'),
+        dimension_geojson = request.POST.get('geojsonsubconjunto'),
+        dimension_type = models.DimensionType.objects.get(pk = "35b0b478-9675-45fe-8da5-02ea9ef88f1b")
+    )
+
+    territorioSubconjunto.full_clean()
+    territorioSubconjunto.save()
+
+    restricciones.full_clean()
+    restricciones.save()
+    proyid = request.POST.get('project_id')
+
+    dimen = models.TerritorialDimension.objects.get(pk = request.POST.get('dimensionIDparaTerritorialD'))
+
+    with transaction.atomic():
+        tarea = models.Task(
+            task_name = request.POST.get('task_name'),
+            task_type = models.TaskType.objects.get(pk = request.POST.get('task_type_id')),
+            task_quantity = request.POST.get('task_quantity'),
+            task_priority = models.TaskPriority.objects.get(priority_id = request.POST.get('task_priority_id')),
+            task_description = request.POST.get('task_description'),
+            project = models.Project.objects.get(pk = proyid),
+            task_observation = "esto es para reportes",
+            proj_dimension = dimen,
+            instrument = models.Instrument.objects.get(pk = request.POST.get('instrument_id')),
+            territorial_dimension = territorioSubconjunto,
+            task_restriction = restricciones,
+        )
+
+        try:
+            tarea.full_clean()
+            tarea.save()
+            data = serializers.serialize('python', [tarea])
+
+            response = {
+                'code':     201,
+                'tarea':    data,
+                'status':   'success'
+            }
+
+        except ValidationError as e:
+            territorioSubconjunto.delete()
+            restricciones.delete()
+            response = {
+                'code':     400,
+                'errors':   dict(e),
+                'status':   'error'
+            }
+
+        except IntegrityError as e:
+            territorioSubconjunto.delete()
+            restricciones.delete()
+            response = {
+                'code':     400,
+                'message':  str(e),
+                'status':   'success'
+            }
+
+    return JsonResponse(response, safe=False, status=response['code'])##
 
 ##
 # @brief recurso que provee el listado de tareas
@@ -45,113 +200,94 @@ from myapp.view.notificaciones import gestionCambios
 def listadoTareas(request):
 
     try:
-
         # Obtener usuario autenticado
         usuario = usuarioAutenticado(request)
-
+        person = models.Person.objects.get(user__userid = usuario.userid)
+        tareasUsuario = []
+        proyectosUsuario = []
+        n = ""
         # Superadministrador
-        if str(usuario.rolid) == '8945979e-8ca5-481e-92a2-219dd42ae9fc':
-            proyectosUsuario = []
+        if str(person.role_id) == ROL_SUPER_ADMIN:
+            tareasUsuario = []
+            n="select tk.* from opx.task as tk order by tk.task_creation_date DESC;"
 
         # Consulta de proyectos para un usuario proyectista
-        elif str(usuario.rolid) == '628acd70-f86f-4449-af06-ab36144d9d6a':
-            proyectosUsuario = list(models.Proyecto.objects.filter(proypropietario=usuario.userid).values('proyid'))
+        elif str(person.role_id) == ROL_PROYECTISTA:
+            n="select tk.*, restric.* \
+                from opx.person as persona  \
+                inner join opx.project as proyecto on proyecto.proj_owner_id = persona.pers_id  \
+                inner join opx.task as tk on tk.project_id = proyecto.proj_id \
+                inner join opx.task_restriction as restric on tk.task_restriction_id = restric.restriction_id  \
+                where persona.pers_id = '"+str(person.pers_id)+"' order by tk.task_creation_date DESC;"
 
         # Consulta de proyectos para un usuario voluntario o validador
-        elif str(usuario.rolid) == '0be58d4e-6735-481a-8740-739a73c3be86' or str(usuario.rolid) == '53ad3141-56bb-4ee2-adcf-5664ba03ad65':
-            proyectosUsuario = list(models.Equipo.objects.filter(userid = usuario.userid).values('proyid'))
+        elif str(person.role_id) == ROL_VOLUNTARIO or str(person.pers_id) == ROL_VALIDADOR:
+            n="select distinct tk.*, restric.* \
+                from opx.person as person \
+                inner join opx.team_person as tp on person.pers_id = tp.person_id \
+                inner join opx.project_team as pt on tp.team_id = pt.team_id \
+                inner join opx.task as tk on tk.project_id = pt.project_id \
+                inner join opx.task_restriction as restric on tk.task_restriction_id = restric.restriction_id \
+                where person.pers_id = '"+str(person.pers_id)+"' order by tk.task_creation_date DESC;"   
 
-        # ================ Obtener página validación de la misma ========================
+      # ================ Obtener página validación de la misma ========================
         page = request.GET.get('page')
 
         if (page is None):
             page = 1
 
         all = request.GET.get('all')
-
-        # Obtener Búsqueda y validación de la misma
-        search = request.GET.get('search')
-
-        query = "select t.*, i.instrnombre, p.proynombre from v1.tareas as t " \
-                "inner join v1.proyectos as p on t.proyid = p.proyid " \
-                "inner join v1.instrumentos  as i on t.instrid = i.instrid"
-
-        if len(proyectosUsuario) > 0 or search is not None:
-
-            query += " where "
-
-            #   Busqueda de tareas por proyecto
-            if len(proyectosUsuario) == 1:
-                query += "t.proyid = '" + str(proyectosUsuario[0]['proyid']) + "'"
-
-            if len(proyectosUsuario) > 1:
-                firstItemQuery = True
-                for p in proyectosUsuario[:-1]:
-
-                    if firstItemQuery:
-                        query += "("
-                        firstItemQuery = False
-
-                    query += "t.proyid = '" + str(p['proyid']) + "' or "
-
-                query += "t.proyid = '" + str(proyectosUsuario[-1]['proyid']) + "')"
-
-            # Busqueda por Nombre
-            if search is not  None:
-                if len(proyectosUsuario) > 0:
-                    query += " and"
-
-                query += " (t.tarenombre ~* '" + search + "');"
+       
 
         with connection.cursor() as cursor:
-            cursor.execute(query)
+            cursor.execute(n)
 
             # formatear respuesta de base de datos
             tareas = dictfetchall(cursor)
+       
+        # Progreso de las Tareas
+        for t in tareas:
+            t['task_type_name'] = (models.TaskType.objects.get(pk = t['task_type_id'])).task_type_name
+            t['instrument_name']= (models.Instrument.objects.get(pk = t['instrument_id'])).instrument_name
+            t['proj_name']= (models.Project.objects.get(pk = t['project_id'])).proj_name
+            t['priority_name']= (models.TaskPriority.objects.get(pk = t['task_priority_id'])).priority_name
 
-            # Progreso de las Tareas
-            for t in tareas:
-                # Tipo encuesta
-                if t['taretipo'] == 1:
+            # Tipo encuesta
+            if t['task_type_id'] == 1:
+                encuestas = models.Survery.objects.filter(task_id__exact=t['task_id']) #Me quedé varado en el survey
+                if t['task_completness'] != 0:
+                    progreso = (len(encuestas) * 100) / t['task_completness']
+                    t['task_quantity'] = progreso
 
-                    encuestas = models.Encuesta.objects.filter(tareid__exact=t['tareid'])
-                    progreso = (len(encuestas) * 100) / t['tarerestriccant']
-                    t['progreso'] = progreso
+        # Obtener Búsqueda y validación de la misma
+        search = request.GET.get('search')
+        
+        if search is not  None:
+            tareas = models.Task.objects.filter(task_name__icontains = search)
+            tareas = list(tareas.values())
+        if all is not None and all == "1":
+            data = {
+                'code': 200,
+                'tareas': tareas,
+                'status': 'success'
+            }
+        else:
+            # Obtener Página
+            paginator = Paginator(tareas, 10)
+            # Obtener lista de tareas
+            tareas = paginator.page(page).object_list
+            data = {
+                'code': 200,
+                'paginator': {
+                    'currentPage': page,
+                    'perPage': paginator.per_page,
+                    'lastPage': paginator.num_pages,
+                    'total': paginator.count
+                },
+                'tareas': tareas,
+                'status': 'success'
+            }        # Obtener Búsqueda y validación de la misma
 
-                    # instrumento = models.Instrumento.objects.get(pk=t['instrid'])
-                    # detalleFormulario = detalleFormularioKoboToolbox(instrumento.instridexterno)
-                    #
-                    # if(detalleFormulario):
-                    #     progreso = (detalleFormulario['deployment__submission_count'] * 100) / t['tarerestriccant']
-                    #     t['progreso'] = progreso
-
-            if all is not None and all == "1":
-
-                data = {
-                    'code': 200,
-                    'tareas': tareas,
-                    'status': 'success'
-                }
-
-            else:
-
-                # Obtener Página
-                paginator = Paginator(tareas, 10)
-
-                # Obtener lista de tareas
-                tareas = paginator.page(page).object_list
-
-                data = {
-                    'code': 200,
-                    'paginator': {
-                        'currentPage': page,
-                        'perPage': paginator.per_page,
-                        'lastPage': paginator.num_pages,
-                        'total': paginator.count
-                    },
-                    'tareas': tareas,
-                    'status': 'success'
-                }
 
     except EmptyPage:
 
@@ -162,6 +298,7 @@ def listadoTareas(request):
         }
 
     return JsonResponse(data, safe = False, status = data['code'])
+
 
 ##
 # @brief recurso que provee las tareas asociadas a las dimensiónes geograficas del sistema
@@ -224,17 +361,21 @@ def listadoTareasMapa(request):
 def detalleTarea(request, tareid):
 
     try:
-        tarea = models.Tarea.objects.get(pk = tareid)
-
+        tarea = models.Task.objects.get(pk = tareid)
+        restricciones = models.TaskRestriction.objects.get(pk = tarea.task_restriction.restriction_id)
         tareaDict = model_to_dict(tarea)
+        restriccionesDict = model_to_dict(restricciones)
         
         # Tipo encuesta
-        if tareaDict['taretipo'] == 1:
+        if tareaDict['task_type'] == 1:
 
-            encuestas = models.Encuesta.objects.filter(tareid__exact=tarea.tareid)
-            progreso = (len(encuestas) * 100) / tareaDict['tarerestriccant']
-            tareaDict['progreso'] = progreso
-
+            encuestas = models.Survery.objects.filter(task_id__exact=tarea.task_id)
+            progreso = (len(encuestas) * 100) / tareaDict['task_quantity']
+            tareaDict['task_completness'] = progreso
+            tareaDict['task_start_date'] = restricciones.task_start_date
+            tareaDict['task_end_date'] = restricciones.task_end_date
+            tareaDict['start_time'] = restricciones.start_time
+            tareaDict['end_time'] = restricciones.end_time
             # instrumento = models.Instrumento.objects.get(pk=tareaDict['instrid'])
             # detalleFormulario = detalleFormularioKoboToolbox(instrumento.instridexterno)
             #
@@ -245,7 +386,8 @@ def detalleTarea(request, tareid):
         data = {
             'code': 200,
             'status': 'success',
-            'tarea': tareaDict
+            'tarea': tareaDict,
+            'restriccion': restriccionesDict
         }
 
     except ObjectDoesNotExist:
@@ -264,64 +406,7 @@ def detalleTarea(request, tareid):
 
     return JsonResponse(data, status = data['code'], safe = False)
 
-##
-# @brief recurso de almacenamiento de Tareas
-# @param request Instancia HttpRequest
-# @return cadena JSON
-#
-@csrf_exempt
-@api_view(["POST"])
-@permission_classes((IsAuthenticated,))
-def almacenamientoTarea(request):
-
-    tareNombre = request.POST.get('tarenombre')
-    tareTipo = request.POST.get('taretipo')
-    tareRestricGeo = "{}"
-    tareRestricCant = request.POST.get('tarerestriccant')
-    tareRestricTime = "{}"
-    instrID = request.POST.get('instrid')
-    proyID = request.POST.get('proyid')
-    dimensionid = request.POST.get('dimensionid')
-    geojson_subconjunto = request.POST.get('geojsonsubconjunto')
-    taredescripcion = request.POST.get('taredescripcion')
-    tareprioridad = request.POST.get('tareprioridad')
-
-    tarea = models.Tarea(tarenombre = tareNombre, taretipo = tareTipo, tarerestricgeo = tareRestricGeo,
-                         tarerestriccant = tareRestricCant, tarerestrictime = tareRestricTime,
-                         instrid = instrID, proyid = proyID, dimensionid = dimensionid,
-                         geojson_subconjunto = geojson_subconjunto, taredescripcion = taredescripcion,
-                         tareprioridad=tareprioridad)
-
-    try:
-        tarea.full_clean()
-
-        tarea.save()
-        data = serializers.serialize('python', [tarea])
-
-        response = {
-            'code':     201,
-            'tarea':    data,
-            'status':   'success'
-        }
-
-    except ValidationError as e:
-        response = {
-            'code':     400,
-            'errors':   dict(e),
-            'status':   'error'
-        }
-
-    except IntegrityError as e:
-        response = {
-            'code':     400,
-            'message':  str(e),
-            'status':   'success'
-        }
-
-    return JsonResponse(response, safe=False, status=response['code'])
-
-##
-# @brief recurso de eliminación de tareas
+# # @brief recurso de eliminación de tareas
 # @param request Instancia HttpRequest
 # @param tareid Identificación de una tarea
 # @return cadena JSON
@@ -332,9 +417,17 @@ def almacenamientoTarea(request):
 def eliminarTarea(request, tareid):
 
     try:
-        tarea = models.Tarea.objects.get(pk = tareid)
+        tarea = models.Task.objects.get(pk = tareid)
+        restriccion = models.TaskRestriction.objects.get(pk = tarea.task_restriction.restriction_id)
 
+        subterritorio = models.TerritorialDimension.objects.get(pk = tarea.territorial_dimension.dimension_id)
+
+        
         tarea.delete()
+        restriccion.delete()
+        subterritorio.delete()
+
+
 
         return JsonResponse({'status': 'success'})
 
@@ -355,54 +448,71 @@ def eliminarTarea(request, tareid):
 @permission_classes((IsAuthenticated,))
 def actualizarTarea(request, tareid):
     try:
-        tarea = models.Tarea.objects.get(pk=tareid)
 
-        estado = int(request.POST.get('tareestado'))
+        with transaction.atomic():
 
-        tarea.tarenombre = request.POST.get('tarenombre')
-        #tarea.taretipo = request.POST.get('taretipo')
-        tarea.tarerestriccant = request.POST.get('tarerestriccant')
-        tarea.proyid = request.POST.get('proyid')
-        tarea.taredescripcion = request.POST.get('taredescripcion')
-        tarea.tareprioridad = request.POST.get('tareprioridad');
+            estado = 0
+            tarea = models.Task.objects.get(pk=tareid)
 
-        tarea.full_clean()
 
-        if estado == 2 and tarea.tareestado != 2:
+            restriction = models.TaskRestriction.objects.get(pk = request.POST.get('task_restriction_id'))
+            restriction.start_time = request.POST.get('tarfechainicio')
+            restriction.task_end_date = request.POST.get('tarfechacierre')
+            restriction.start_time = request.POST.get('HoraInicio')
+            restriction.end_time = request.POST.get('HoraCierre')
+            restriction.save()
 
-            if validarTarea(tarea):
+            taskpriority = models.TaskPriority.objects.get(pk = request.POST.get('task_priority_id'))
+
+            tasktipe = models.TaskType.objects.get(pk = request.POST.get('task_type_id'))
+        
+
+            projecto = models.Project.objects.get(pk = request.POST.get('project_id'))
+            tarea.task_name = request.POST.get('task_name')
+            tarea.task_type = tasktipe
+            tarea.task_quantity = request.POST.get('task_quantity')
+            tarea.project = projecto
+            tarea.task_description = request.POST.get('task_description')
+            tarea.task_priority = taskpriority
+            tarea.task_restriction = restriction
+            tarea.save()
+
+            """
+            if estado == 2 and tarea.tareestado != 2:
+
+                if validarTarea(tarea):
+
+                    tarea.tareestado = estado
+                    tarea.save()
+
+            else:
 
                 tarea.tareestado = estado
                 tarea.save()
 
-        else:
+            # Verificando que el recurso haya sido llamado desde Gestión de Cambios
+            if request.POST.get('gestionCambio', None) is not None:
 
-            tarea.tareestado = estado
-            tarea.save()
+                # Obtener los usuarios que hacen del proyecto
+                usuarios = obtenerEmailsEquipo(tarea.proyid)
 
-        # Verificando que el recurso haya sido llamado desde Gestión de Cambios
-        if request.POST.get('gestionCambio', None) is not None:
+                # Detalle del Cambio
+                detalle = "Encuestas Objetivo: {}".format(tarea.tarerestriccant)
 
-            # Obtener los usuarios que hacen del proyecto
-            usuarios = obtenerEmailsEquipo(tarea.proyid)
+                # Enviar Notificaciones
+                gestionCambios(usuarios, 'tarea', tarea.task_name, 1, detalle)"""
 
-            # Detalle del Cambio
-            detalle = "Encuestas Objetivo: {}".format(tarea.tarerestriccant)
-
-            # Enviar Notificaciones
-            gestionCambios(usuarios, 'tarea', tarea.tarenombre, 1, detalle)
-
-        response = {
-            'code': 200,
-            'tarea': serializers.serialize('python', [tarea])[0],
-            'status': 'success'
-        }
+            response = {
+                'code': 200,
+                'tarea': serializers.serialize('python', [tarea])[0],
+                'status': 'success'
+            }
 
     except ObjectDoesNotExist as e:
         response = {
             'code': 404,
             'message': str(e),
-            'status': 'error'
+            'status': 'error' + str(e)
         }
 
     except ValidationError as e:
@@ -427,6 +537,75 @@ def actualizarTarea(request, tareid):
 
     return JsonResponse(response, safe=False, status=response['code'])
 
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def actualizarTareaGestionCambios(request, tareid):
+    try:
+
+        with transaction.atomic():
+
+            estado = 0
+            tarea = models.Task.objects.get(pk=tareid)
+
+            restriction = models.TaskRestriction.objects.get(pk = request.POST.get('task_restriction_id'))
+            restriction.task_start_date = request.POST.get('task_start_date')
+            restriction.task_end_date = request.POST.get('task_end_date')
+            restriction.start_time = request.POST.get('start_time')
+            restriction.end_time = request.POST.get('end_time')
+            restriction.save()
+
+            tarea.task_quantity = request.POST.get('task_quantity')
+            tarea.save()
+
+            # Obtener los usuarios que hacen del proyecto
+            pers_ids = getPersonsIdByProject(tarea.project.proj_id)
+            change = {
+                'start_date': request.POST.get('task_start_date'),
+                'end_date': request.POST.get('task_end_date'),
+                'start_time': request.POST.get('start_time'),
+                'end_time': request.POST.get('end_time'),
+                'task_quantity': request.POST.get('task_quantity')
+            }
+            notificaciones.notify(pers_ids, notificaciones.CAMBIO_FECHA_TAREA, None, change, project_name=tarea.project.proj_name, task_name=tarea.task_name)
+
+            response = {
+                'code': 200,
+                'tarea': serializers.serialize('python', [tarea])[0],
+                'status': 'success'
+            }
+
+    except ObjectDoesNotExist as e:
+        response = {
+            'code': 404,
+            'message': str(e),
+            'status': 'error' + str(e)
+        }
+
+    except ValidationError as e:
+
+        try:
+            errors = dict(e)
+        except ValueError:
+            errors = list(e)[0]
+
+        response = {
+            'code': 400,
+            'errors': errors,
+            'status': 'error'
+        }
+
+    except IntegrityError as e:
+        response = {
+            'code': 500,
+            'message': str(e),
+            'status': 'error'
+        }
+
+    return JsonResponse(response, safe=False, status=response['code'])
+
+
 ##
 # @brief Función que se encarga de validar una tarea especifica
 # @param tarea Instancia del modelo Tarea
@@ -434,9 +613,9 @@ def actualizarTarea(request, tareid):
 #
 def validarTarea(tarea):
 
-    if ((tarea.tareestado == 1 and tarea.taretipo == 1) or (tarea.tareestado != 2 and tarea.taretipo == 2)):
+    if ((tarea.tareestado == 1 and tarea.task_type_id == 1) or (tarea.tareestado != 2 and tarea.taretipo == 2)):
 
-        if tarea.taretipo == 1:
+        if tarea.task_type_id == 1:
 
             encuestasSinValidar = models.Encuesta.objects.filter(instrid__exact=tarea.instrid) \
                                                          .filter(estado__exact=0)
@@ -464,7 +643,7 @@ def validarTarea(tarea):
             else:
                 raise ValidationError(['Todas las encuestas deben ser validadas'])
 
-        elif tarea.taretipo == 2:
+        elif tarea.task_type_id == 2:
 
             cartografias = models.Cartografia.objects.filter(instrid__exact=tarea.instrid)
 
@@ -529,15 +708,15 @@ def promoverUsuario(user):
     puntajeProyectista = obtenerParametroSistema('umbral-proyectista')
 
     # Promoción de voluntario a validador
-    if user.rolid == '0be58d4e-6735-481a-8740-739a73c3be86' and user.puntaje >= puntajeValidador:
-        user.rolid = '53ad3141-56bb-4ee2-adcf-5664ba03ad65'
+    if user.rolid == ROL_VOLUNTARIO and user.puntaje >= puntajeValidador:
+        user.rolid = ROL_VALIDADOR
         user.save()
 
         notificacionPromocionUsuario(user, 'Validador')
 
     # Promocion de Validador a Proyectista
-    if user.rolid == '53ad3141-56bb-4ee2-adcf-5664ba03ad65' and user.puntaje >= puntajeProyectista:
-        user.rolid = '628acd70-f86f-4449-af06-ab36144d9d6a'
+    if user.rolid == ROL_VALIDADOR and user.puntaje >= puntajeProyectista:
+        user.rolid = ROL_PROYECTISTA
         user.save()
 
         notificacionPromocionUsuario(user, 'Proyectista')
@@ -567,12 +746,14 @@ def notificacionPromocionUsuario(user, rol):
 # @param request Instancia HttpRequest
 # @param dimensionid Identificación de la dimensión geográfica
 #
-def tareasXDimensionTerritorial(request, dimensionid):
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def tareasXDimensionTerritorial(request, proj_id):
 
     try:
-        dimensionTerritorial = models.DelimitacionGeografica.objects.get(pk=dimensionid)
+        #dimensionTerritorial = models.TerritorialDimension.objects.get(pk=dimensionid) nunca lo usaron
 
-        tareas = models.Tarea.objects.filter(dimensionid__exact=dimensionid).values()
+        tareas = models.Task.objects.filter(project__proj_id__exact=proj_id).values()
 
         response = {
             'code': 200,

@@ -89,19 +89,19 @@ def eliminarPlantilla(request, planid):
 def crearPlantilla(request):
 
     try:
+        with transaction.atomic():
+            user = usuarioAutenticado(request)
+            descripcion = request.POST.get('descripcion')
 
-        user = usuarioAutenticado(request)
-        descripcion = request.POST.get('descripcion')
+            plantilla = PlantillaEquipo(descripcion=descripcion, userid=user.userid)
+            plantilla.full_clean()
+            plantilla.save()
 
-        plantilla = PlantillaEquipo(descripcion=descripcion, userid=user.userid)
-        plantilla.full_clean()
-        plantilla.save()
-
-        response = {
-            'code': 201,
-            'data': model_to_dict(plantilla),
-            'status': 'success'
-        }
+            response = {
+                'code': 201,
+                'data': model_to_dict(plantilla),
+                'status': 'success'
+            }
 
     except ValidationError as e:
 
@@ -125,18 +125,19 @@ def crearPlantilla(request):
 def edicionPlantilla(request, planid):
 
     try:
-        plantilla = PlantillaEquipo.objects.get(pk=planid)
+        with transaction.atomic():
+            plantilla = PlantillaEquipo.objects.get(pk=planid)
 
-        plantilla.descripcion = request.POST.get('descripcion')
+            plantilla.descripcion = request.POST.get('descripcion')
 
-        response = {
-            'code': 200,
-            'data': model_to_dict(plantilla),
-            'status': 'success'
-        }
+            response = {
+                'code': 200,
+                'data': model_to_dict(plantilla),
+                'status': 'success'
+            }
 
-        plantilla.full_clean()
-        plantilla.save()
+            plantilla.full_clean()
+            plantilla.save()
 
     except ObjectDoesNotExist:
         response = {
@@ -170,7 +171,7 @@ def miembrosPlantilla(request, planid):
         #miembrosPlantilla = MiembroPlantilla.objects.filter(planid__exact=planid).values()
         with connection.cursor() as cursor:
             query = "select mp.miplid, u.userfullname from v1.miembros_plantilla mp inner join v1.usuarios u on u.userid = mp.userid " \
-                    "where mp.planid = '" + planid + "'"
+                    "where mp.planid = '" + planid + "' order by u.userfullname ASC"
 
             cursor.execute(query)
 
@@ -203,25 +204,25 @@ def miembrosPlantilla(request, planid):
 def agregarMiembro(request, planid):
 
     try:
+        with transaction.atomic():
+            plantillaEquipo = PlantillaEquipo.objects.get(pk=planid)
 
-        plantillaEquipo = PlantillaEquipo.objects.get(pk=planid)
+            userid = request.POST.get('userid')
 
-        userid = request.POST.get('userid')
+            cantidadUsuarios = MiembroPlantilla.objects.filter(userid__exact=userid) \
+                                                .filter(planid__exact=planid)
 
-        cantidadUsuarios = MiembroPlantilla.objects.filter(userid__exact=userid) \
-                                            .filter(planid__exact=planid)
+            if len(cantidadUsuarios) == 0:
 
-        if len(cantidadUsuarios) == 0:
+                miembroPlantilla = MiembroPlantilla(userid=userid, planid=planid)
+                miembroPlantilla.full_clean()
+                miembroPlantilla.save()
 
-            miembroPlantilla = MiembroPlantilla(userid=userid, planid=planid)
-            miembroPlantilla.full_clean()
-            miembroPlantilla.save()
-
-            response = {
-                'code': 201,
-                'data': model_to_dict(miembroPlantilla),
-                'status': 'success'
-            }
+                response = {
+                    'code': 201,
+                    'data': model_to_dict(miembroPlantilla),
+                    'status': 'success'
+                }
 
         else:
             response = {
@@ -262,14 +263,15 @@ def agregarMiembro(request, planid):
 def eliminarMiembro(request, miplid):
 
     try:
-        miembroPlantilla = MiembroPlantilla.objects.get(pk=miplid)
+        with transaction.atomic():
+            miembroPlantilla = MiembroPlantilla.objects.get(pk=miplid)
 
-        miembroPlantilla.delete()
+            miembroPlantilla.delete()
 
-        response = {
-            'code': 200,
-            'status': 'success'
-        }
+            response = {
+                'code': 200,
+                'status': 'success'
+            }
 
     except ObjectDoesNotExist:
         response = {
@@ -358,8 +360,6 @@ def miembrosPlantillaView(request, planid):
     try:
 
         plantilla = PlantillaEquipo.objects.get(pk=planid)
-
-        print(plantilla.descripcion)
 
         response = render(request, "proyectos/gestion-miembros-plantilla.html", {'plantilla': plantilla})
 

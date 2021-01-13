@@ -55,9 +55,9 @@
                       </tbody>
                     </table>-->
                     <b-table
-                        :current-page="pagination.currentPage"
                         :fields="teamFields"
                         :items="filteredTeams"
+                        :current-page="pagination.currentPage"
                         :per-page="pagination.perPage"
                     >
                         <template v-slot:cell(acciones)="data">
@@ -66,9 +66,9 @@
 
                               </a>
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" :href="'/equipos/' + data.item.planid + '/miembros/'"> Miembros </a>
                                 <a @click.prevent="plantillaEdicion = data.item" data-toggle="modal" data-target="#editar-plantilla" class="dropdown-item" href="#"> Edición </a>
-                                <a @click.prevent="eliminarPlantilla(data.item.planid)" class="dropdown-item" href="#"> Eliminación </a>
+                                <a @click.prevent="eliminarPlantilla(data.item.team_id)" class="dropdown-item" href="#"> Eliminación</a>
+                                <a class="dropdown-item" :href="'/equipos/' + data.item.team_id + '/miembros/'"> Miembros </a>
                               </div>
                             </div>
                         </template>
@@ -93,17 +93,23 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
+                          <h5 class="modal-title">Crear equipo</h5>
                             <button class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
                             <form action="" class="form-horizontal">
-                                <div class="form-group row">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <label class="bmd-label-floating">Nombre</label>
-                                        <input v-model="almacenamientoPlantilla.descripcion" type="text" class="form-control">
+                                        <input v-model="almacenamientoPlantilla.team_name" type="text" class="form-control">
                                     </div>
+                                    <div class="col-md-12">
+                                      <label class="bmd-label-floating">Descripcion</label>
+                                      <input v-model="almacenamientoPlantilla.team_description" type="text" class="form-control">
+                                    </div>
+                                    
                                     <div align="center" class="col-md-12">
-                                        <button :disabled="!almacenamientoPlantilla.descripcion" @click.prevent="guardarPlantilla()" class="btn" type="button"> Guardar </button>
+                                        <button :disabled="!almacenamientoPlantilla.team_name || !almacenamientoPlantilla.team_description" @click.prevent="guardarPlantilla()" class="btn" type="button"> Guardar </button>
                                     </div>
                                 </div>
                             </form>
@@ -117,17 +123,22 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
+                            <h5 class="modal-title">Editar Decisión</h5>
                             <button class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
                             <form action="" class="form-horizontal">
-                                <div class="form-group row">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <label class="bmd-label-floating">Nombre</label>
-                                        <input v-model="plantillaEdicion.descripcion" type="text" class="form-control">
+                                        <input v-model="plantillaEdicion.team_name" type="text" class="form-control">
+                                    </div>
+                                    <div class="col-md-12">
+                                      <label class="bmd-label-floating">Descripcion</label>
+                                      <input v-model="plantillaEdicion.team_description" type="text" class="form-control">
                                     </div>
                                     <div align="center" class="col-md-12">
-                                        <button :disabled="!plantillaEdicion.descripcion" @click.prevent="editarPlantilla()" class="btn" type="button"> Editar </button>
+                                        <button :disabled="!plantillaEdicion.team_description || !plantillaEdicion.team_name" @click.prevent="editarPlantilla()" class="btn" type="button"> Editar </button>
                                     </div>
                                 </div>
                             </form>

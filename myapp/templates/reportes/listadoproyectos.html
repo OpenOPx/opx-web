@@ -1,0 +1,186 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+
+    <div id="gestion-reportes-proyectos" class="container-fluid">
+
+      <div :class="{loading:loading}"></div>
+
+      <!-- Proyectos -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title ">Proyectos</h4>
+              <p class="card-category"> Reportes de Proyectos </p>
+            </div>
+            <div class="card-header">
+              <form action="">
+                <div class="form-group">
+                  <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filterKey">
+                </div>
+              </form>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <!--<table class="table">
+                  <thead class=" text-primary">
+                    <th>
+                      Estado
+                    </th>
+                    <th>
+                      Nombre
+                    </th>
+                    <th>
+                      Descripción
+                    </th>
+                    <th>
+                      Creación
+                    </th>
+                    <th></th>
+                  </thead>
+                  <tbody>
+                    <tr v-for="proyecto in filteredProjects">
+                      <td>
+                        [[ proyecto.proyestado | estado-entidad ]]
+                      </td>
+                      <td>
+                        [[ proyecto.proynombre ]]
+                      </td>
+                      <td>
+                        [[ proyecto.proydescripcion ]]
+                      </td>
+                      <td>
+                        [[ proyecto.proyfechacreacion ]]
+                      </td>
+                      <td>
+                        <div class="dropdown">
+                          <a class="actions-menu" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a @click.prevent="edicionProyecto = proyecto" data-toggle="modal" data-target="#editar-proyecto" class="dropdown-item" href="#"> Edición </a>
+                            <a @click="eliminarProyecto(proyecto.proyid)" class="dropdown-item" href="#"> Eliminación </a>
+                            <a class="dropdown-item" :href="'/equipos/proyecto/' + proyecto.proyid"> Equipo </a>
+                            <a class="dropdown-item" :href="'/proyectos/' + proyecto.proyid + '/tareas/'"> Tareas </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>-->
+                <b-table
+                        :fields="proyectosFields"
+                        :items="filteredProjects"
+                        :current-page="pagination.currentPage"
+                        :per-page="pagination.perPage"
+                >
+                  <template v-slot:cell(proydescripcion)="data">
+                    <span v-html="data.item.proydescripcion"></span>
+                  </template>
+                  <template v-slot:cell(estado)="data">
+                    [[ data.item.proyestado | estado-entidad ]]
+                  </template>
+                  <template v-slot:cell(proyfechacreacion)="data">
+                    [[ data.item.proyfechacreacion | fechas ]]
+                  </template>
+                  <template v-slot:cell(acciones)="data">
+                    <div class="dropdown">
+                          <a class="actions-menu" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                          </a>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" :href="'/reportes/proyecto/' + data.item.proj_id"> Reporte Proyecto </a>
+                      </div>
+                    </div>
+                  </template>
+                </b-table>
+
+                <b-pagination
+                  v-model="pagination.currentPage"
+                  :total-rows="filteredProjects.length"
+                  :per-page="pagination.perPage"
+                ></b-pagination>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modales -->
+      <div class="row">
+          <!-- Edición de Proyecto -->
+          <div class="modal fade" id="editar-proyecto">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Editar Proyecto</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Nombre</label>
+                          <input v-model="edicionProyecto.proynombre" type="text" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Descripción</label>
+                          <textarea v-model="edicionProyecto.proydescripcion" class="form-control"></textarea>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="" class="bmd-label-floating">Decisiones</label>
+                          <multiselect v-model="edicionProyecto.decisiones" :multiple="true" :options="decisiones" track-by="decs_id" label="decs_name"></multiselect>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="" class="bmd-label-floating">Contextos</label>
+                          <multiselect v-model="edicionProyecto.contextos" :multiple="true" :options="contextos" track-by="context_id" label="context_description"></multiselect>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="" class="bmd-label-floating">Fecha Inicio</label>
+                          <input class="form-control" type="date" v-model="edicionProyecto.proyfechainicio" />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="" class="bmd-label-floating">Fecha Cierre</label>
+                          <input class="form-control" type="date" v-model="edicionProyecto.proyfechacierre" />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="" class="bmd-label-floating">Tipo</label>
+                          <select class="form-control" v-model="edicionProyecto.tiproid">
+                            <option value="">Seleccione</option>
+                            <option v-for="tp in tiposProyecto" :value="tp.projtype_id"> [[ tp.projtype_name ]] </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div align="center" class="col-md-12">
+                        <div class="form-group">
+                          <button :disabled="!edicionProyecto.proynombre || !edicionProyecto.proydescripcion || !edicionProyecto.decisiones || !edicionProyecto.contextos || !edicionProyecto.proyfechainicio || !edicionProyecto.proyfechacierre || !edicionProyecto.tiproid" class="btn" @click="editarProyecto()" type="button">Editar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+
+{% endblock %}

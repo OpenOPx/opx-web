@@ -12,8 +12,8 @@
         <div class="col-md-7">
           <div class="card">
             <div class="card-header card-header-primary">
-              <h4 class="card-title ">Equipo de proyecto</h4>
-              <p class="card-category"> Equipo de Proyecto </p>
+              <h4 class="card-title ">Equipos asignados al proyecto</h4>
+              <p class="card-category"> Información general </p>
             </div>
             <div class="card-header">
               <form action="">
@@ -68,7 +68,7 @@
 
                       </a>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a @click.prevent="eliminarIntegrante(data.item.equid)" class="dropdown-item" href="#"> Eliminación </a>
+                        <a @click.prevent="eliminarIntegrante(data.item.proj_team_id)" class="dropdown-item" href="#"> Eliminación</a>
                       </div>
                     </div>
                   </template>
@@ -87,8 +87,8 @@
         <div class="col-md-5">
           <div class="card">
             <div class="card-header card-header-primary">
-              <h4 class="card-title "> Usuarios Disponibles </h4>
-              <p class="card-category"> Usuarios Disponibles </p>
+              <h4 class="card-title "> Equipos disponibles </h4>
+              <p class="card-category"> Información general </p>
             </div>
             <div class="card-header">
               <form action="">
@@ -143,7 +143,7 @@
 
                       </a>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a @click.prevent="addIntegrante(data.item.userid)" class="dropdown-item" href="#"> Agregar </a>
+                        <a @click.prevent="addIntegrante(data.item.team_id)" class="dropdown-item" href="#"> Agregar</a>
                       </div>
                     </div>
                   </template>

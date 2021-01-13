@@ -1,0 +1,341 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+<style>
+  *
+  {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+  }
+  .accordion
+  {
+      width: 400dp;
+  }
+  .accordion .contentBx
+  {
+      position: relative;
+      margin: 20px 20px;
+      background: #fff;
+      
+  }
+  .accordion .contentBx .label1
+  {
+      position: relative;
+      padding: 10px;
+      background: #0CBAEF;;
+      color: #000;
+      cursor: pointer;
+  }
+  .accordion .contentBx .label1::before
+  {
+      content: '+';
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      font-size: 1.5em;
+  }
+  .accordion .contentBx.active .label1::before
+  {
+      content: '-';
+  }
+  .accordion .contentBx .content
+  {
+      position: relative;
+      height: 0;
+      overflow: hidden;
+      transition: 0.25s;
+      overflow-y: auto;
+  }
+  .accordion .contentBx.active .content
+  {
+      height: 310px;
+      padding: 10px;
+  }
+  
+</style>
+<script>
+  const accordion = document.getElementsByClassName('contentBx');
+  for(i=0;i<accordion.length;i++){
+    accordion[i].addEventListener('click',function(){
+      this.classList.toggle('active')
+    })
+  }
+</script>
+<script>
+  function ddselect() {
+    var d = document.getElementById("ddselect");
+    var displayText = d.options[d.selectedIndex].value;
+    document.getElementById("txtvalue").value = displayText
+  };
+</script>
+
+<div class="container-fluid" id="reportes-proyectoindividual">
+  <!-- TABS -->
+  <div class="row">
+     <div class="col-md-12">
+        <div class="card">
+           <div class="card-header card-header-tabs card-header-primary">
+              <div class="nav-tabs-navigation">
+                 <div class="nav-tabs-wrapper">
+                    <h3 class="card-category">
+                       <dt> [[proyecto.proj_name]] </dt>
+                    </h3>
+                    <ul class="nav nav-tabs" data-tabs="tabs">
+                       <li class="nav-item">
+                          <a @click="cambioVista(1)" class="nav-link show" href="#">
+                             <i class="material-icons">info</i> General
+                             <div class="ripple-container"></div>
+                             <div class="ripple-container"></div>
+                          </a>
+                       </li>
+                       <li class="nav-item">
+                          <a @click="cambioVista(2)" class="nav-link" href="#">
+                             <i class="material-icons">work</i> Tareas
+                             <div class="ripple-container"></div>
+                             <div class="ripple-container"></div>
+                          </a>
+                       </li>
+                       <li class="nav-item">
+                          <a @click="cambioVista(3)" class="nav-link show" href="#">
+                             <i class="material-icons">insert_comment</i> Comentarios
+                             <div class="ripple-container"></div>
+                             <div class="ripple-container"></div>
+                          </a>
+                       </li>
+                    </ul>
+                 </div>
+              </div>
+           </div>
+           <div class="card-body">
+              <div class="row" :class="{'display-none': !vistaGeneral}">
+                 <div class="col-md-12">
+                    <div class="row mt-3">
+                       <div class="col-md-6" align="center">
+                          <div class="mt-5"> [[proyecto.proj_description]] </div>
+                          
+                       </div>
+                       <div class="col-md-6">
+                          <table class="table table-hover">
+                             <thead>
+                                <th align="center">Fechas importantes</th>
+                             </thead>
+                             <tbody>
+                                <tr>
+                                   <td align="center">Fecha creación</td>
+                                   <td align="center">[[ proyecto.proj_creation_date ]]</td>
+                                </tr>
+                                <tr>
+                                   <td align="center">Fecha inicio</td>
+                                   <td align="center">[[ proyecto.proj_start_date ]]</td>
+                                </tr>
+                                <tr>
+                                   <td align="center">Fecha cierre</td>
+                                   <td align="center">[[ proyecto.proj_close_date ]]</td>
+                                </tr>
+                             </tbody>
+                          </table>
+                       </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6" align = "center">
+                          <div class="form-group">
+                              <div class="col-md-8">
+                                 <div class="form-group">
+                                    <select class="form-control" id="ddselect" onchange="ddselect();">
+                                       <option value=-1>Seleccione una decisión</option>
+                                       <option v-for="decision in projectdecision" :value="decision.decs_description"> [[
+                                          decision.decs_name ]]
+                                       </option>
+                                    </select>
+                                 </div>
+                              </div>
+                              <div class="col-md-8">
+                                 <textarea class="form-control" id="txtvalue" readonly=»readonly> </textarea>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="card">
+                              <div class="card-header card-header-primary">
+                                 <h4 class="card-title " align = "center"> Equipos del proyecto</h4>
+                              </div>
+                              <div class="card-body">
+                                 <div class="table-responsive">
+                                    <b-table
+                                       :fields="teamFields"
+                                       :items="filteredTeams"
+                                       >
+                                    </b-table>
+                                 </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                         <div id="dimension"></div>
+                      </div>
+                   </div>
+                 </div>
+              </div>
+              <div class="row" :class="{'display-none': !vistaTareas}">
+                <div class="col-md-12">
+                   <div class="container-fluid" id="dashboard"></div>
+                   <div class="col-md-12">
+                      <div class="accordion" >
+                        <div class="contentBx active" v-for="tarea in tareas2">
+                            <div class="label1">[[tarea.task_name]]</div>
+                            <div class="content">
+                               <table class="table table-hover">
+                                  <tbody>
+                                     <tr>
+                                        <td class="label" align="center">
+                                            <div>
+                                                [[tarea.task_description]]
+                                            </div>
+                                        </td>
+                                        <td class="label" align="center">
+                                           <div> Progreso: [[tarea.task_quantity]]% </div>
+                                        </td>
+                                     </tr>
+                                     <tr>
+                                        <td class="label" align="center">
+                                           <div class="col-md-6">
+                                              <table class="table table-hover">
+                                                 <thead>
+                                                    <th align="center">Fechas importantes</th>
+                                                 </thead>
+                                                 <tbody>
+                                                    <tr>
+                                                       <td align="center">Fecha creación</td>
+                                                       <td align="center">[[ tarea.task_creation_date ]]</td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td align="center">Fecha inicio</td>
+                                                       <td align="center">[[ tarea.task_start_date ]]</td>
+                                                    </tr>
+                                                    <tr>
+                                                       <td align="center">Fecha cierre</td>
+                                                       <td align="center">[[ tarea.task_end_date ]]</td>
+                                                    </tr>
+                                                 </tbody>
+                                              </table>
+                                           </div>
+                                        </td>
+                                        <td class="label" align="center">
+                                            <div class="col-md-6">
+                                               <table class="table table-hover">
+                                                  <tbody>
+                                                     <tr>
+                                                        <td align="center">Estado</td>
+                                                        <td align="center">[[ tarea.isactive ]]</td>
+                                                     </tr>
+                                                     <tr>
+                                                        <td align="center">Prioridad</td>
+                                                        <td align="center">[[ tarea.priority_name ]]</td>
+                                                     </tr>
+                                                  </tbody>
+                                               </table>
+                                            </div>
+                                         </td>
+                                     </tr>
+                                  </tbody>
+                               </table>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+              <div class="row" :class="{'display-none': !vistaComentarios}" data-target="#agregar-comentario">
+                <div class="col-md-12">
+                   <button class="btn button-right" data-target="#agregar-comentario" data-toggle="modal">
+                   Crear Comentario
+                   </button>
+                   <div class="card-header">
+                   </div>
+                   <b-table :current-page="pagination.currentPage" :fields="comentariosFields" :items="filteredComments"
+                      :per-page="pagination.perPage">
+                      <template v-slot:cell(acciones)="data">
+                         <div class="dropdown">
+                            <a class="actions-menu" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                               <a @click.prevent="eliminarComentario(data.item.comment_id)" class="dropdown-item" href="#">
+                               Eliminación</a>
+                            </div>
+                         </div>
+                      </template>
+                   </b-table>
+                   <b-pagination v-model="pagination.currentPage" :per-page="pagination.perPage"
+                      :total-rows="filteredComments.length"></b-pagination>
+                </div>
+             </div>
+           </div>
+        </div>
+     </div>
+     <div class="row">
+        <!-- Creación de Comentario -->
+        <div class="modal fade" id="agregar-comentario">
+           <div class="modal-dialog">
+              <div class="modal-content">
+                 <div class="modal-header">
+                    <h5 class="modal-title">Crear Comentario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                 </div>
+                 <div class="modal-body">
+                    <form action="">
+                       <div class="row">
+                          <div class="col-md-12">
+                             <div class="form-group">
+                                <label class="bmd-label-floating">Nombre</label>
+                                <textarea v-model="almacenamientoComentario.comment_title" class="form-control"></textarea>
+                             </div>
+                          </div>
+                          <div class="col-md-12">
+                             <div class="form-group">
+                                <label class="bmd-label-floating">Descripción</label>
+                                <textarea v-model="almacenamientoComentario.comment_description" class="form-control"></textarea>
+                             </div>
+                          </div>
+                          <div align="center" class="col-md-12">
+                             <div class="form-group">
+                                <button
+                                   :disabled="!almacenamientoComentario.comment_title || !almacenamientoComentario.comment_description"
+                                   class="btn" @click="almacenarComentario()" type="button">Guardar</button>
+                             </div>
+                          </div>
+                       </div>
+                    </form>
+                 </div>
+              </div>
+           </div>
+        </div>
+        <!-- Detalle de Proyectos -->
+        <div class="modal fade" id="estadisticas-tareas">
+           <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                 <div class="modal-body">
+                    <div class="row">
+                       <div class="col md-6">
+                          <canvas id="tareas-x-tipo" width="400" height="400"></canvas>
+                       </div>
+                       <div class="col md-6">
+                          <canvas id="tareas-x-estado" width="400" height="400"></canvas>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+{% endblock %}

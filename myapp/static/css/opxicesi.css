@@ -1,0 +1,18 @@
+/*Estilos por Leonardo*/
+
+/*Estilos por Sebastián*/
+
+/*Estilos por Juan Manuel*/
+
+/*Estilos por beycker*/
+.icesi-toggle::before{
+    content: '+ ';
+}
+.icesi-toggle.active::before{
+    content: '- ';
+}
+/*
+.icesi-toggle::before[aria-expanded="false"]{
+    content: 'v ';
+}
+*/

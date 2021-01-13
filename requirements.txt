@@ -5,6 +5,8 @@ cligj==0.5.0
 Django==2.2.4
 djangorestframework==3.10.2
 djangorestframework-simplejwt==4.3.0
+fcm-django
+Cython
 Fiona==1.8.9.post2
 geopandas==0.6.1
 munch==2.5.0

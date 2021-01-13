@@ -1,0 +1,78 @@
+{% extends "layouts/main.html" %}
+
+{% block content %}
+
+    <div class="container-fluid" id="reporteRank">
+      <div :class="{loading:loading}"></div>
+
+      <div class="row">
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-primary">
+                <div id="ranking-circle">
+                    <i class="fa fa-trophy" aria-hidden="true"></i>
+                  </div>
+            </div>
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <b-table
+                  :current-page="paginationTop.currentPage"
+                  :fields="topUsersFields"
+                  :items="top"
+                  :per-page="paginationTop.perPage"
+                >
+                </b-table>
+
+                <b-pagination
+                  v-model="paginationTop.currentPage"
+                  :per-page="paginationTop.perPage"
+                  :total-rows="top.length"
+                ></b-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title ">Otros usuarios</h4>
+            </div>
+            <div class="card-header">
+              <form action="">
+                <div class="form-group">
+                  <input class="form-control" placeholder="Busqueda ..." type="text" v-model="filteredOtherUsers">
+                </div>
+              </form>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+
+                <b-table
+                  :current-page="paginationOtherUsers.currentPage"
+                  :fields="otherUsersFields"
+                  :items="filteredOtherUs"
+                  :per-page="paginationOtherUsers.perPage"
+                >
+
+                </b-table>
+
+                <b-pagination
+                  v-model="paginationOtherUsers.currentPage"
+                  :per-page="paginationOtherUsers.perPage"
+                  :total-rows="filteredOtherUsers.length"
+                ></b-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+{% endblock %}

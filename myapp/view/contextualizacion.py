@@ -39,7 +39,7 @@ def categorizacion(request):
             tokenDecoded = tokenBackend.decode(request.META['HTTP_AUTHORIZATION'].split()[1], verify=True)
 
             # consultando el usuario
-            user = Usuario.objects.get(pk=tokenDecoded['user_id'])
+            user = User.objects.get(pk=tokenDecoded['user_id'])
             edadUsuario = calculoEdad(user.fecha_nacimiento)
 
         if barrioUbicacion is not None and barrioSeleccion is not None and year is not None:
@@ -50,20 +50,20 @@ def categorizacion(request):
             for conf in conflictividades:
 
                 queryIndicadorCiudad = "select SUM(t.cantidad) as count from \
-                                        (select * from v1.contextualizaciones \
+                                        (select * from opx.contextualizaciones \
                                         where (confid = '{0}') \
                                         and (fecha_hecho between '{1}-01-01' and '{1}-12-31')) t;" \
                                         .format(conf.confid, year)
 
                 queryIndicadorUbicacion = "select SUM(t.cantidad) as count from \
-                                        (select * from v1.contextualizaciones \
+                                        (select * from opx.contextualizaciones \
                                         where confid = '{0}' \
                                         and barrioid = '{1}' \
                                         and (fecha_hecho between '{2}-01-01' and '{2}-12-31')) t;" \
                                         .format(conf.confid, barrioUbicacion, year)
 
                 queryIndicadorSeleccion = "select SUM(t.cantidad) as count from \
-                                           (select * from v1.contextualizaciones \
+                                           (select * from opx.contextualizaciones \
                                            where confid = '{0}' \
                                            and barrioid = '{1}' \
                                            and (fecha_hecho between '{2}-01-01' and '{2}-12-31')) t;" \
@@ -71,7 +71,7 @@ def categorizacion(request):
 
                 if 'user' in locals():
                     queryIndicadorPerfil = "select SUM(t.cantidad) as count from \
-                                               (select * from v1.contextualizaciones \
+                                               (select * from opx.contextualizaciones \
                                                where confid = '{0}' \
                                                and barrioid = {1} \
                                                and generoid = '{2}' \
@@ -167,7 +167,7 @@ def todo(request):
             tokenDecoded = tokenBackend.decode(request.META['HTTP_AUTHORIZATION'].split()[1], verify=True)
 
             # consultando el usuario
-            user = Usuario.objects.get(pk=tokenDecoded['user_id'])
+            user = User.objects.get(pk=tokenDecoded['user_id'])
             edadUsuario = calculoEdad(user.fecha_nacimiento)
 
 
@@ -189,25 +189,25 @@ def todo(request):
                 anios.append(count)
 
                 queryIndicadorCiudad = "SELECT SUM(t.cantidad) as count FROM (" \
-                        "SELECT * FROM v1.contextualizaciones " \
+                        "SELECT * FROM opx.contextualizaciones " \
                         "WHERE fecha_hecho between '{0}-01-01' and '{0}-12-31') t" \
                         .format(count)
 
                 queryIndicadorUbicacion = "SELECT SUM(t.cantidad) as count FROM (" \
-                        "SELECT * FROM v1.contextualizaciones " \
+                        "SELECT * FROM opx.contextualizaciones " \
                         "WHERE barrioid = {1} and " \
                         "(fecha_hecho between '{0}-01-01' and '{0}-12-31')) t" \
                         .format(count, barrioUbicacion)
 
                 queryIndicadorSeleccion = "SELECT SUM(t.cantidad) as count FROM (" \
-                                          "SELECT * FROM v1.contextualizaciones " \
+                                          "SELECT * FROM opx.contextualizaciones " \
                                           "WHERE barrioid = {1} and " \
                                           "(fecha_hecho between '{0}-01-01' and '{0}-12-31')) t" \
                                           .format(count, barrioSeleccion)
 
                 if 'user' in locals():
                     queryIndicadorPerfil = "SELECT SUM(t.cantidad) as count FROM (" \
-                                           "SELECT * FROM v1.contextualizaciones " \
+                                           "SELECT * FROM opx.contextualizaciones " \
                                            "WHERE barrioid = {1} " \
                                            "and generoid = '{2}' " \
                                            "and nivelid = '{3}' " \
@@ -335,7 +335,7 @@ def mensual(request):
             tokenDecoded = tokenBackend.decode(request.META['HTTP_AUTHORIZATION'].split()[1], verify=True)
 
             # consultando el usuario
-            user = Usuario.objects.get(pk=tokenDecoded['user_id'])
+            user = User.objects.get(pk=tokenDecoded['user_id'])
             edadUsuario = calculoEdad(user.fecha_nacimiento)
 
         if barrioUbicacion is not None and barrioSeleccion is not None and year is not None:
@@ -411,18 +411,18 @@ def mensual(request):
             for mes in meses:
 
                 queryIndicadorCiudad = "SELECT SUM(t.cantidad) as count FROM (" \
-                                       "SELECT * FROM v1.contextualizaciones " \
+                                       "SELECT * FROM opx.contextualizaciones " \
                                        "WHERE fecha_hecho between '{0}-{1}-01' and '{0}-{1}-{2}') t" \
                                         .format(year, mes['value'], mes['lastDay'])
 
                 queryIndicadorUbicacion = "SELECT SUM(t.cantidad) as count FROM (" \
-                                          "SELECT * FROM v1.contextualizaciones " \
+                                          "SELECT * FROM opx.contextualizaciones " \
                                           "WHERE barrioid = {3} and " \
                                           "(fecha_hecho between '{0}-{1}-01' and '{0}-{1}-{2}')) t" \
                                           .format(year, mes['value'], mes['lastDay'], barrioUbicacion)
 
                 queryIndicadorSeleccion = "SELECT SUM(t.cantidad) as count FROM (" \
-                                          "SELECT * FROM v1.contextualizaciones " \
+                                          "SELECT * FROM opx.contextualizaciones " \
                                           "WHERE barrioid = {3} and " \
                                           "(fecha_hecho between '{0}-{1}-01' and '{0}-{1}-{2}')) t" \
                                           .format(year, mes['value'], mes['lastDay'], barrioSeleccion)
@@ -430,7 +430,7 @@ def mensual(request):
                 if 'user' in locals():
 
                     queryIndicadorPerfil = "SELECT SUM(t.cantidad) as count FROM (" \
-                                           "SELECT * FROM v1.contextualizaciones " \
+                                           "SELECT * FROM opx.contextualizaciones " \
                                            "WHERE barrioid = {3} " \
                                            "and generoid = '{4}' " \
                                            "and nivelid = '{5}' " \
@@ -549,7 +549,7 @@ def semanal(request):
             tokenDecoded = tokenBackend.decode(request.META['HTTP_AUTHORIZATION'].split()[1], verify=True)
 
             # consultando el usuario
-            user = Usuario.objects.get(pk=tokenDecoded['user_id'])
+            user = User.objects.get(pk=tokenDecoded['user_id'])
             edadUsuario = calculoEdad(user.fecha_nacimiento)
 
         if barrioUbicacion is not None and barrioSeleccion is not None and year is not None:
@@ -593,20 +593,20 @@ def semanal(request):
             for sem in semana:
 
                 queryIndicadorCiudad = "SELECT SUM(t.cantidad) as count FROM (" \
-                                       "SELECT * FROM v1.contextualizaciones " \
+                                       "SELECT * FROM opx.contextualizaciones " \
                                        "WHERE dia = {1} and " \
                                        "(fecha_hecho between '{0}-01-01' and '{0}-12-31')) t" \
                                        .format(year, sem['value'])
 
                 queryIndicadorUbicacion = "SELECT SUM(t.cantidad) as count FROM (" \
-                                          "SELECT * FROM v1.contextualizaciones " \
+                                          "SELECT * FROM opx.contextualizaciones " \
                                           "WHERE dia = {1} and " \
                                           "barrioid = {2} and " \
                                           "(fecha_hecho between '{0}-01-01' and '{0}-12-31')) t" \
                                           .format(year, sem['value'], barrioUbicacion)
 
                 queryIndicadorSeleccion = "SELECT SUM(t.cantidad) as count FROM (" \
-                                          "SELECT * FROM v1.contextualizaciones " \
+                                          "SELECT * FROM opx.contextualizaciones " \
                                           "WHERE dia = {1} and " \
                                           "barrioid = {2} and " \
                                           "(fecha_hecho between '{0}-01-01' and '{0}-12-31')) t" \
@@ -614,7 +614,7 @@ def semanal(request):
 
                 if 'user' in locals():
                     queryIndicadorPerfil = "SELECT SUM(t.cantidad) as count FROM (" \
-                                           "SELECT * FROM v1.contextualizaciones " \
+                                           "SELECT * FROM opx.contextualizaciones " \
                                            "WHERE dia = {1} " \
                                            "and barrioid = {2}" \
                                            "and generoid = '{3}' " \
@@ -732,7 +732,7 @@ def dia(request):
             tokenDecoded = tokenBackend.decode(request.META['HTTP_AUTHORIZATION'].split()[1], verify=True)
 
             # consultando el usuario
-            user = Usuario.objects.get(pk=tokenDecoded['user_id'])
+            user = User.objects.get(pk=tokenDecoded['user_id'])
             edadUsuario = calculoEdad(user.fecha_nacimiento)
 
         if barrioUbicacion is not None and barrioSeleccion is not None and year is not None:
@@ -768,7 +768,7 @@ def dia(request):
                     horaFin = "{}:59:59".format(str(hora))
 
                 queryIndicadorCiudad = "SELECT SUM(t.cantidad) as count FROM (" \
-                                       "SELECT * FROM v1.contextualizaciones " \
+                                       "SELECT * FROM opx.contextualizaciones " \
                                        "WHERE dia = {1} and " \
                                        "(fecha_hecho between '{0}-01-01' and '{0}-12-31') and" \
                                        "(hora_hecho between '{2}' and '{3}')) t" \
@@ -776,7 +776,7 @@ def dia(request):
 
 
                 queryIndicadorUbicacion = "SELECT SUM(t.cantidad) as count FROM (" \
-                                          "SELECT * FROM v1.contextualizaciones " \
+                                          "SELECT * FROM opx.contextualizaciones " \
                                           "WHERE dia = {1} and " \
                                           "barrioid = {4} and " \
                                           "(fecha_hecho between '{0}-01-01' and '{0}-12-31') and" \
@@ -784,7 +784,7 @@ def dia(request):
                                           .format(year, diaSemana, horaInicio, horaFin, barrioUbicacion)
 
                 queryIndicadorSeleccion = "SELECT SUM(t.cantidad) as count FROM (" \
-                                          "SELECT * FROM v1.contextualizaciones " \
+                                          "SELECT * FROM opx.contextualizaciones " \
                                           "WHERE dia = {1} and " \
                                           "barrioid = {4} and " \
                                           "(fecha_hecho between '{0}-01-01' and '{0}-12-31') and" \
@@ -793,7 +793,7 @@ def dia(request):
 
                 if 'user' in locals():
                     queryIndicadorPerfil = "SELECT SUM(t.cantidad) as count FROM (" \
-                                           "SELECT * FROM v1.contextualizaciones " \
+                                           "SELECT * FROM opx.contextualizaciones " \
                                            "WHERE dia = {1} " \
                                            "and barrioid = {4}" \
                                            "and generoid = '{5}' " \

@@ -15,7 +15,7 @@ let contexto = new Vue({
         // Paginación
         pagination: {
             currentPage: 1,
-            perPage: 5
+            perPage: 10
         },
         // Busqueda
         filter: '',
@@ -23,7 +23,7 @@ let contexto = new Vue({
         contextsFields: [
             {
                 label: 'Descripción',
-                key: 'descripcion',
+                key: 'context_description',
                 sortable: true
             },
             {

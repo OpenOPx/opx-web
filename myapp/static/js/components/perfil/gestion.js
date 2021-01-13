@@ -3,7 +3,10 @@ gestionPerfil = new Vue({
     delimiters: ['[[', ']]'],
     data: {
         informacionUsuario: {},
-        iniciales: ''
+        iniciales: '',
+        generos: [],
+        barrios: [],
+        nivelesEducativos: [],
     },
     mounted(){
 
@@ -12,6 +15,9 @@ gestionPerfil = new Vue({
         if(path == "/mi-perfil/"){
 
             this.obtenerInformacion();
+            this.listadoGeneros();
+            this.listadoBarrios();
+            this.listadoNivelesEducativos();
         }
     },
     methods: {
@@ -29,13 +35,43 @@ gestionPerfil = new Vue({
                 if(response.data.code == 200 && response.data.status == 'success'){
 
                     this.informacionUsuario = response.data.usuario;
-
-                    if(this.informacionUsuario.hasOwnProperty('userfullname') && this.informacionUsuario.userfullname != null){
-
-                        this.getIniciales(this.informacionUsuario.userfullname);
-                    }
+                    //this.informacionUsuario.userfullname = this.informacionUsuario.pers_name + " " + this.informacionUsuario.pers_lastname
+                    this.iniciales = this.informacionUsuario.pers_name.charAt(0)+this.informacionUsuario.pers_lastname.charAt(0)
                 }
             })
+        },
+        listadoGeneros(){
+
+            axios.get('/generos/list/')
+            .then(response => {
+
+                if(response.data.code == 200 && response.data.status == 'success'){
+
+                    this.generos = response.data.generos;
+                }
+            });
+        },
+        listadoBarrios(){
+
+            axios.get('/barrios/list/')
+            .then(response => {
+
+                if(response.data.code == 200 && response.data.status == 'success'){
+
+                    this.barrios = response.data.barrios;
+                }
+            });
+        },
+        listadoNivelesEducativos(){
+
+            axios.get('/niveles-educativos/list/')
+            .then(response => {
+
+                if(response.data.code == 200 && response.data.status == 'success'){
+
+                    this.nivelesEducativos = response.data.nivelesEducativos;
+                }
+            });
         },
         verificacionPassword(){
 

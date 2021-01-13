@@ -54,12 +54,9 @@ estadisticas = new Vue({
 
                                 Promise.all(statsPromises)
                                 .then(() => {
-
-                                    console.log("bn");
                                     $("#estadisticas-tareas").modal('show');
                                 })
                                 .catch((reason) => {
-                                    console.log(reason)
                                     Swal.fire({
                                         title: 'Error',
                                         text: 'Ocurrio un error. Por favor intenta de nuevo',
